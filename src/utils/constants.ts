@@ -3,6 +3,7 @@
 export const TRACK_MESSAGE_COUNT = 10;
 export const INITIAL_BREAD_LEVEL = 1;
 export const INITIAL_MAX_POINTS = 300;
+export const MAX_POINTS_VARIATION_PERCENTAGE = 0.2; // +/- 20% variation for max points on reset
 export const LEVEL_LOSS_PERCENTAGE = 0.1;
 
 // Jam Boost

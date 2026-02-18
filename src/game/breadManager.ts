@@ -6,7 +6,8 @@ import {
   BAR_FILLED, 
   BAR_EMPTY,
   INITIAL_MAX_POINTS,
-  LEVEL_LOSS_PERCENTAGE 
+  LEVEL_LOSS_PERCENTAGE, 
+  MAX_POINTS_VARIATION_PERCENTAGE
 } from '../utils/constants';
 
 export function getAesthetic(level: number): string {
@@ -75,7 +76,7 @@ export function attemptUpgrade(player: Player): { success: boolean; levelsGained
 export function resetPointMeter(player: Player): void {
   player.currentPoints = 0;
   // Randomize maxPoints: 300 +/- 20% (240 to 360)
-  const variation = INITIAL_MAX_POINTS * 0.2;
+  const variation = INITIAL_MAX_POINTS * MAX_POINTS_VARIATION_PERCENTAGE;
   player.maxPoints = Math.floor(
     INITIAL_MAX_POINTS - variation + Math.random() * (variation * 2)
   );
