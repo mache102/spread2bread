@@ -2,52 +2,52 @@ import Database from 'better-sqlite3';
 import { config } from '../config';
 
 let db: Database.Database | null = null;
+let dbPath: string | null = null;
 
-export function getDatabase(dbPath?: string): Database.Database {
+/**
+ * Return the active database connection. Opens (or reopens) the connection
+ * as needed. If the underlying file was deleted/moved while the process was
+ * running (SQLITE_READONLY_DBMOVED), the stale handle is silently closed and
+ * a fresh connection to the same path is created — no retry wrappers needed
+ * in callers.
+ */
+export function getDatabase(path?: string): Database.Database {
+  const resolvedPath = path || dbPath || config.databasePath;
+
+  if (db) {
+    // Check whether the previously opened file still exists at the same path.
+    // If not, close the stale handle so a new one is created below.
+    try {
+      // A zero-cost way to probe: run a trivial read-only query.
+      db.prepare('SELECT 1').get();
+    } catch (err: any) {
+      if (err && err.code === 'SQLITE_READONLY_DBMOVED') {
+        try { db.close(); } catch { /* ignore */ }
+        db = null;
+      } else {
+        throw err;
+      }
+    }
+  }
+
   if (!db) {
-    db = new Database(dbPath || config.databasePath);
+    dbPath = resolvedPath;
+    db = new Database(resolvedPath);
     initializeSchema();
   }
+
   return db;
 }
 
 export function closeDatabase(): void {
   if (db) {
-    try {
-      db.close();
-    } catch (err) {
-      // ignore close errors
-    }
+    try { db.close(); } catch { /* ignore */ }
     db = null;
-  }
-}
-
-/**
- * Execute a callback with the active Database. If a write fails because the
- * underlying database file was moved/deleted (SQLite error code
- * `SQLITE_READONLY_DBMOVED`), close and reopen the database and retry once.
- */
-export function withDatabaseRetry<T>(fn: (db: Database.Database) => T, retries = 1): T {
-  try {
-    const d = getDatabase();
-    return fn(d);
-  } catch (err: any) {
-    // If the DB file was moved/deleted while process was running, better-sqlite3
-    // surfaces SQLITE_READONLY_DBMOVED on subsequent writes. Recover by
-    // closing and reopening the DB and retrying once.
-    if (retries > 0 && err && err.code === 'SQLITE_READONLY_DBMOVED') {
-      closeDatabase();
-      const d = getDatabase();
-      return fn(d);
-    }
-    throw err;
   }
 }
 
 export function resetDatabase(): void {
   if (!db) return;
-  
-  // Clear all tables
   db.exec(`
     DELETE FROM players;
     DELETE FROM tracked_messages;
