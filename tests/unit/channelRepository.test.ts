@@ -16,9 +16,9 @@ describe('ChannelRepository defaults', () => {
     closeDatabase();
   });
 
-  test('isChannelActive returns true by default for unknown channel', () => {
+  test('isChannelActive returns false by default for unknown channel', () => {
     const active = repo.isChannelActive('unknown-channel', 'g1');
-    expect(active).toBe(true);
+    expect(active).toBe(false);
   });
 
   test('setChannelActive can disable and enable a channel', () => {

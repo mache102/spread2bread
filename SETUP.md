@@ -63,6 +63,52 @@ Register slash commands with Discord:
 npm run deploy
 ```
 
+## Admin Bot Setup
+
+After deploying commands, an admin must configure the bot in each guild before players can earn points.
+
+### 1. Enable channels
+
+The bot ignores all channels by default. Use `/admin enable` to opt channels in:
+
+```
+/admin enable #general
+/admin enable #bread-game
+```
+
+To check which channels are active at any time:
+```
+/admin list
+```
+
+To remove a channel from the game:
+```
+/admin disable #general
+```
+
+### 2. (Optional) Set initial max points
+
+New players start with a max-point meter that controls when they can upgrade. The default is **300 points**. You can change this per-guild:
+
+```
+/admin set-initial-maxpoints 500
+```
+
+Minimum value is 10.
+
+### 3. (Optional) Configure boost-expiry notifications
+
+By default, boost-expiry notifications are disabled. To enable them, pick a channel where the bot posts expiry notices:
+
+```
+/admin set-expiry-channel #bot-log
+```
+
+To disable again:
+```
+/admin disable-expiry-notifiers
+```
+
 ## Testing
 
 ```bash

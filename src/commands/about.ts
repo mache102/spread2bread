@@ -1,4 +1,4 @@
-import { CommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { GameService } from '../services/gameService';
 import { createSuccessEmbed } from '../utils/embeds';
 import { POINT_DISTRIBUTION_WINDOW, MAX_LEADERBOARD_FETCH } from '../utils/constants';
@@ -7,7 +7,7 @@ export const data = new SlashCommandBuilder()
   .setName('about')
   .setDescription('Learn about Spread2Bread bot');
 
-export async function execute(interaction: CommandInteraction, gameService: GameService): Promise<void> {
+export async function execute(interaction: ChatInputCommandInteraction, gameService: GameService): Promise<void> {
   await interaction.deferReply();
 
   try {

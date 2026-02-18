@@ -1,4 +1,4 @@
-import { TrackedMessage, PenaltyInfo } from '../models';
+import { TrackedMessage, PenaltyInfo, PointGain } from '../models';
 import { POINT_DISTRIBUTION_WINDOW, BOOST_MULTIPLIER } from '../utils/constants';
 import { ChannelRepository } from '../storage/channelRepository';
 import { PlayerRepository } from '../storage/playerRepository';
@@ -18,7 +18,7 @@ export class PointTracker {
     guildId: string,
     userId: string,
     timestamp: number
-  ): { penalties: PenaltyInfo[]; gains: import('../models').PointGain[] } {
+  ): { penalties: PenaltyInfo[]; gains: PointGain[] } {
     // Get recent messages before this one
     const recentMessages = this.channelRepo.getRecentMessages(channelId, POINT_DISTRIBUTION_WINDOW);
     
@@ -40,10 +40,10 @@ export class PointTracker {
     return { penalties, gains };
   }
 
-  private distributePoints(messages: TrackedMessage[], guildId: string, currentUserId: string): { penalties: PenaltyInfo[]; gains: import('../models').PointGain[] } {
+  private distributePoints(messages: TrackedMessage[], guildId: string, currentUserId: string): { penalties: PenaltyInfo[]; gains: PointGain[] } {
     const now = Date.now();
     const penalties: PenaltyInfo[] = [];
-    const gains: import('../models').PointGain[] = [];
+    const gains: PointGain[] = [];
     
     for (const message of messages) {
       // Don't give points to yourself

@@ -1,4 +1,4 @@
-import { CommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import {
   BOOST_MULTIPLIER,
   BOOST_DURATION_MS,
@@ -11,7 +11,7 @@ export const data = new SlashCommandBuilder()
   .setName('help')
   .setDescription('View all available commands and how to use them');
 
-export async function execute(interaction: CommandInteraction): Promise<void> {
+export async function execute(interaction: ChatInputCommandInteraction): Promise<void> {
   await interaction.deferReply();
 
   const embed = new EmbedBuilder()
@@ -41,8 +41,12 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
           '`/admin enable` - Enable game in a channel\n' +
           '`/admin disable` - Disable game in a channel\n' +
           '`/admin list` - List active channels\n' +
-          '`/admin give-points <amount>` - Modify a user\'s points\n' +
-          '`/admin give-levels <amount>` - Modify a user\'s levels',
+          '`/admin give-points <amount> [user]` - Modify a user\'s points\n' +
+          '`/admin give-levels <amount> [user]` - Modify a user\'s levels\n' +
+          '`/admin show-points [user]` - View a user\'s current points\n' +
+          '`/admin set-initial-maxpoints <amount>` - Set guild\'s initial max points\n' +
+          '`/admin set-expiry-channel` - Set boost-expiry notification channel\n' +
+          '`/admin disable-expiry-notifiers` - Disable boost expiry notifications',
         inline: false,
       },
       {

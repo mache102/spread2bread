@@ -1,4 +1,4 @@
-import { CommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { GameService } from '../services/gameService';
 import { createUpgradeResultEmbed } from '../utils/embeds';
 import { config } from '../config';
@@ -7,7 +7,7 @@ export const data = new SlashCommandBuilder()
   .setName('upgrade')
   .setDescription('Attempt to level up your bread');
 
-export async function execute(interaction: CommandInteraction, gameService: GameService): Promise<void> {
+export async function execute(interaction: ChatInputCommandInteraction, gameService: GameService): Promise<void> {
   await interaction.deferReply();
 
   try {

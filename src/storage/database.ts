@@ -61,7 +61,7 @@ function initializeSchema(): void {
     CREATE TABLE IF NOT EXISTS channels (
       channelId TEXT NOT NULL,
       guildId TEXT NOT NULL,
-      isActive INTEGER NOT NULL DEFAULT 1,
+      isActive INTEGER NOT NULL DEFAULT 0,
       PRIMARY KEY (channelId, guildId)
     );
 

@@ -5,7 +5,6 @@ import {
   BAR_LENGTH, 
   BAR_FILLED, 
   BAR_EMPTY,
-  INITIAL_MAX_POINTS,
   MAX_POINTS_VARIATION_PERCENTAGE
 } from '../utils/constants';
 

@@ -92,7 +92,6 @@ client.once(Events.ClientReady, () => {
       const expired = jamBoostService.getExpiredBoostPlayers();
       if (expired.length === 0) return;
 
-      const { GuildRepository } = require('./storage/guildRepository');
       const guildRepo = new GuildRepository();
 
       for (const p of expired) {
@@ -110,8 +109,8 @@ client.once(Events.ClientReady, () => {
           if (channelId) {
             // Post in configured guild channel if available
             const ch = await client.channels.fetch(channelId).catch(() => null);
-            if (ch && typeof (ch as any).isTextBased === 'function' && (ch as any).isTextBased() && 'send' in ch) {
-              await (ch as any).send({ embeds: [createBoostExpiredEmbed(user.username)] });
+            if (ch?.isSendable()) {
+              await ch.send({ embeds: [createBoostExpiredEmbed(user.username)] });
             } else {
               // fallback to DM
               await user.send({ embeds: [createBoostExpiredEmbed(user.username)] });

@@ -1,4 +1,4 @@
-import { CommandInteraction, SlashCommandBuilder, PermissionFlagsBits, ChannelType } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder, PermissionFlagsBits, ChannelType } from 'discord.js';
 import { GameService } from '../services/gameService';
 import { createSuccessEmbed, createErrorEmbed, createPenaltyEmbed } from '../utils/embeds';
 import { getAesthetic } from '../game/breadManager';
@@ -111,7 +111,7 @@ export const data = new SlashCommandBuilder()
       )
   );
 
-export async function execute(interaction: CommandInteraction, gameService: GameService): Promise<void> {
+export async function execute(interaction: ChatInputCommandInteraction, gameService: GameService): Promise<void> {
   await interaction.deferReply({ ephemeral: true });
 
   try {
@@ -119,11 +119,6 @@ export async function execute(interaction: CommandInteraction, gameService: Game
 
     if (!guildId) {
       await interaction.editReply('This command can only be used in a server!');
-      return;
-    }
-
-    if (!interaction.isChatInputCommand()) {
-      await interaction.editReply('Invalid command type.');
       return;
     }
 
@@ -169,7 +164,7 @@ export async function execute(interaction: CommandInteraction, gameService: Game
       const absAmount = Math.abs(amount);
       const mainEmbed = createSuccessEmbed(
         'Points Modified',
-        `${actionText} ${absAmount} points ${amount >= 0 ? 'to' : 'from'} ${user.username}\nNew points: ${result.newPoints}/${result.maxPoints}`
+        `${actionText} ${absAmount} points ${amount >= 0 ? 'to' : 'from'} ${user.username}\nNew points: ${result.newPoints}/???` // intentional: hide maxPoints since it is randomized
       );
 
       const embedsToSend = [mainEmbed];

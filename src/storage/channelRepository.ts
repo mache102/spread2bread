@@ -9,8 +9,8 @@ export class ChannelRepository {
       SELECT isActive FROM channels WHERE channelId = ? AND guildId = ?
     `).get(channelId, guildId) as { isActive: number } | undefined;
 
-    // Default to enabled if there is no explicit row (new installs / older DBs)
-    return channel ? channel.isActive === 1 : true;
+    // Default to disabled; admins must explicitly enable channels via /admin enable
+    return channel ? channel.isActive === 1 : false;
   }
 
   setChannelActive(channelId: string, guildId: string, isActive: boolean): void {

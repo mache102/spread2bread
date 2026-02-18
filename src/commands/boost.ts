@@ -1,4 +1,4 @@
-import { CommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { JamBoostService } from '../services/jamBoostService';
 import { createSuccessEmbed, createErrorEmbed } from '../utils/embeds';
 import { config } from '../config';
@@ -7,7 +7,7 @@ export const data = new SlashCommandBuilder()
   .setName('boost')
   .setDescription('Activate your daily jam boost (15 mins, 3x points to others)');
 
-export async function execute(interaction: CommandInteraction, jamBoostService: JamBoostService): Promise<void> {
+export async function execute(interaction: ChatInputCommandInteraction, jamBoostService: JamBoostService): Promise<void> {
   await interaction.deferReply();
 
   try {

@@ -1,4 +1,5 @@
 import { PlayerRepository } from '../storage/playerRepository';
+import { Player } from '../models';
 import { BOOST_DURATION_MS, BOOST_COOLDOWN_MS, BOOST_MULTIPLIER, MS_PER_MINUTE, MS_PER_HOUR } from '../utils/constants';
 
 export class JamBoostService {
@@ -86,8 +87,8 @@ export class JamBoostService {
     return { isActive: false };
   }
 
-  // Return players whose boosts have expired but still have a positive boostExpiresAt (so we can notify once)
-  getExpiredBoostPlayers(): import('../models').Player[] {
+  // Returns players whose boosts have expired but still have a positive boostExpiresAt (notify once)
+  getExpiredBoostPlayers(): Player[] {
     const now = Date.now();
     return this.playerRepo.getPlayersWithExpiredBoosts(now);
   }

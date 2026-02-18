@@ -50,7 +50,7 @@ Core game mechanics for tracking bread levels and point accumulation
 - [src/game/rangeGenerator.ts](src/game/rangeGenerator.ts) – Dynamic upgrade range generation
 
 Notes:
-- Channels are enabled by default unless explicitly disabled via `/admin disable`.
+- Channels are **disabled by default**; admins must explicitly enable them via `/admin enable #channel`.
 - Jam-boost expiry notifications are **disabled by default**. Use `/admin set-expiry-channel` to enable and configure the channel for a guild.
 - Admins can set a per-guild `initialMaxPoints` used for max-point randomization (`/admin set-initial-maxpoints`).
 - Run `npm run dev` to enable `isDev` — additional console logs will show point gains, upgrades, boosts and expirations.
@@ -63,7 +63,7 @@ Player-facing slash commands
 - [src/commands/upgrade.ts](src/commands/upgrade.ts) – Level up bread
 - [src/commands/leaderboard.ts](src/commands/leaderboard.ts) – Server rankings
 - [src/commands/boost.ts](src/commands/boost.ts) – Activate daily jam boost
-- [src/commands/admin.ts](src/commands/admin.ts) – Admin channel configuration, give points/levels
+- [src/commands/admin.ts](src/commands/admin.ts) – Admin channel configuration, give points/levels, boost expiry setup, initial max-points config
 
 ### Event Handlers
 Discord event processing
@@ -79,7 +79,8 @@ Business logic orchestration
 Database access via repositories
 - [src/storage/database.ts](src/storage/database.ts) – SQLite connection and schema
 - [src/storage/playerRepository.ts](src/storage/playerRepository.ts) – Player data access
-- [src/storage/channelRepository.ts](src/storage/channelRepository.ts) – Channel configuration
+- [src/storage/channelRepository.ts](src/storage/channelRepository.ts) – Channel configuration (enable/disable per-channel)
+- [src/storage/guildRepository.ts](src/storage/guildRepository.ts) – Per-guild settings (initialMaxPoints, boost expiry channel/enabled)
 
 ## 5. Scripts / Dev Tools
 
@@ -100,7 +101,7 @@ Testing infrastructure:
 
 ### Discord API
 - Discord.js v14 client in [src/index.ts](src/index.ts)
-- Gateway intents: Guilds, GuildMessages, MessageContent
+- Gateway intents: `Guilds`, `GuildMessages`
 - Slash commands via REST API
 
 ### Database
