@@ -121,4 +121,52 @@ When implementing changes please follow this lightweight workflow so history and
 - Push the branch and open a PR targeting `main` with a short title and summary.
 - Keep PRs reviewable (small diffs, one responsibility per PR).
 
+---
+
+## Merging PRs to `main` (recommended git commands)
+- Fetch latest main and rebase your branch:
+  - git checkout main
+  - git pull origin main
+  - git checkout <your-branch>
+  - git rebase main
+
+- Resolve conflicts, run tests/lint, then fast-forward merge locally (when approved):
+  - git checkout main
+  - git merge --ff-only <your-branch>
+  - git push origin main
+
+- If a fast-forward merge isn't possible and a merge commit is acceptable:
+  - git checkout main
+  - git merge --no-ff <your-branch>
+  - git push origin main
+
+- Alternatively, use the remote PR UI or GitHub CLI to merge after approval:
+  - gh pr merge <pr-number|branch> --merge (or --squash / --rebase as your project prefers)
+
+> Tip: Always run the full test suite (npm test) and a build (npm run build) before merging.
+
+---
+
+## Repository-level checks & conventions (please follow)
+- Do NOT commit the runtime SQLite DB in `data/` — it is ignored via `.gitignore`.
+  - Use `.env` / `.env.example` for configuration and `process.env.DATABASE_PATH=':memory:'` for tests.
+- Always run tests and linters on your branch before opening a PR:
+  - npm test
+  - npm run build
+- Keep secrets out of the repo (`.env` is ignored). Add missing env vars to `.env.example` instead.
+- Add/update tests for any behavior changes; tests are required for feature and fix PRs.
+- Add a short changelog entry or update `CHANGELOG.md` (if present) for user-facing changes.
+- Use semantic commit messages and the branch naming patterns already listed in this file.
+- Consider adding/maintaining CI (GitHub Actions) that runs: install → build → test → lint → typecheck.
+
+---
+
+## Quick checklist for PR reviewers
+- [ ] Does the branch have a descriptive title and small, focused changes?
+- [ ] Are tests added/updated and passing locally?
+- [ ] Does `npm run build` succeed without errors?
+- [ ] No secrets or DB files included in the diff?
+- [ ] Documentation and prompts updated when behavior or API changes were made?
+- [ ] Recommended: squash/rebase commits to keep history clean (project preference applies).
+
 This workflow is a recommended convention for contributors and automated agents to follow.
