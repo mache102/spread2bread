@@ -104,3 +104,21 @@ max. 100 lines. If the setup reaches beyond 100 lines, then create `setup.sh`-li
 see discord_bot.md
 ## Other
 WIP...
+
+---
+
+## Branch / commit / PR workflow (recommended)
+When implementing changes please follow this lightweight workflow so history and review stay consistent:
+
+- Create a new branch for the work using one of these patterns:
+  - `feature/<short-desc>` — Big new feature (e.g. `feature/bread-upgrade-hints`)
+  - `fix/<short-desc>` — Bug fix (e.g. `fix/channel-default`)
+  - `refactor/<short-desc>` — Internal cleanup
+  - `test/<short-desc>` — New or updated tests
+  - `experiment/<idea>` — Prototyping or exploratory work
+
+- Make small, focused commits with concise messages.
+- Push the branch and open a PR targeting `main` with a short title and summary.
+- Keep PRs reviewable (small diffs, one responsibility per PR).
+
+This workflow is a recommended convention for contributors and automated agents to follow.

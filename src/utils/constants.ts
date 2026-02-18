@@ -27,6 +27,18 @@ export const UPGRADE_RANGES = [
 
 export const NOT_READY_JAM = 'Not Ready';
 
+// Human-friendly hint text for each jam/upgrade range. These are shown in `/bread`
+// to help players decide whether to upgrade now and what they would gain.
+export const UPGRADE_RANGE_HINTS: Record<string, string> = {
+  [NOT_READY_JAM]: 'Not ready — gain more points to upgrade. Keep chatting in enabled channels to earn jam.',
+  Light: 'Upgrade at this range gives **+1 level** — safe to upgrade now.',
+  Spread: 'Upgrade at this range gives **+2 levels** — a small but useful boost.',
+  Generous: 'Upgrade at this range gives **+4 levels** — solid timing for steady progress.',
+  Glazed: `Upgrade at this range gives **+10 levels** — big gain! Warning: overflowing the meter will cost you ${Math.round(LEVEL_LOSS_PERCENTAGE * 100)}% of your levels.`,
+  Glorious: `Upgrade at this range gives **+20 levels** — massive jump! Warning: overflowing the meter will cost you ${Math.round(LEVEL_LOSS_PERCENTAGE * 100)}% of your levels.`,
+  PERFECT: `Upgrade at this range gives **+50 levels** — PERFECT timing! Warning: overflowing the meter will cost you ${Math.round(LEVEL_LOSS_PERCENTAGE * 100)}% of your levels.`,
+};
+
 // Upgrade flavor text thresholds
 export const UPGRADE_LEVEL_EPIC_THRESHOLD = 20;  // levelsGained >= → "Amazing timing!"
 export const UPGRADE_LEVEL_GREAT_THRESHOLD = 10; // levelsGained >= → "Great timing!"

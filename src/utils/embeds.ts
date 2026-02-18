@@ -7,6 +7,7 @@ import {
   BOOST_MULTIPLIER,
   UPGRADE_LEVEL_EPIC_THRESHOLD,
   UPGRADE_LEVEL_GREAT_THRESHOLD,
+  UPGRADE_RANGE_HINTS,
 } from './constants';
 
 export function createBreadStatusEmbed(stats: PlayerStats, username: string, showMaxPoints: boolean = false): EmbedBuilder {
@@ -31,6 +32,13 @@ export function createBreadStatusEmbed(stats: PlayerStats, username: string, sho
     embed.setDescription(`🔥 **JAM BOOST ACTIVE** - Giving ${BOOST_MULTIPLIER}x points to others!`);
   }
   
+  // Add a contextual hint based on the current jam/upgrade range
+  const hint = (typeof stats.jamLevel === 'string' && (UPGRADE_RANGE_HINTS as any)[stats.jamLevel])
+    ? (UPGRADE_RANGE_HINTS as any)[stats.jamLevel]
+    : (stats.canUpgrade ? 'Ready to upgrade — this will increase your bread level.' : 'Not ready — gain more points to upgrade.');
+
+  embed.addFields({ name: 'Hint', value: hint, inline: false });
+
   // Add upgrade ranges if provided (test mode)
   if (stats.upgradeRanges && showMaxPoints) {
     const rangeText = stats.upgradeRanges

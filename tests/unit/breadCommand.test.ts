@@ -67,4 +67,64 @@ describe('/bread command', () => {
     const embed = payload.embeds[0];
     expect(embed.data.title).toBe("Requester's Bread");
   });
+
+  test('shows a helpful hint when not ready to upgrade', async () => {
+    const dummyStats = {
+      player: { userId: 'u1', guildId: 'g1', breadLevel: 1, currentPoints: 10, maxPoints: 300, lastUpgradeAt: 0, lastBoostUsed: 0, boostExpiresAt: 0 },
+      aesthetic: 'Plain Bread',
+      jamLevel: 'Not Ready',
+      jamBar: '----------',
+      canUpgrade: false,
+      isBoosted: false,
+    } as any;
+
+    const mockGameService = { getPlayerStats: vi.fn().mockReturnValue(dummyStats) } as any;
+
+    const mockInteraction: any = {
+      deferReply: vi.fn().mockResolvedValue(undefined),
+      editReply: vi.fn().mockResolvedValue(undefined),
+      user: { id: 'requester', username: 'Requester' },
+      guildId: 'g1',
+      options: { getUser: (_: string) => null },
+    };
+
+    await execute(mockInteraction, mockGameService, false);
+
+    const payload = mockInteraction.editReply.mock.calls[0][0];
+    const embed = payload.embeds[0];
+    const hintField = embed.data.fields.find((f: any) => f.name === 'Hint');
+    expect(hintField).toBeDefined();
+    expect(hintField.value).toMatch(/gain more points/i);
+  });
+
+  test('shows upgrade hint and overflow warning for high-value ranges', async () => {
+    const dummyStats = {
+      player: { userId: 'u2', guildId: 'g1', breadLevel: 42, currentPoints: 290, maxPoints: 300, lastUpgradeAt: 0, lastBoostUsed: 0, boostExpiresAt: 0 },
+      aesthetic: 'Waffle',
+      jamLevel: 'Glazed',
+      jamBar: '█████████░',
+      canUpgrade: true,
+      isBoosted: false,
+    } as any;
+
+    const mockGameService = { getPlayerStats: vi.fn().mockReturnValue(dummyStats) } as any;
+
+    const mockInteraction: any = {
+      deferReply: vi.fn().mockResolvedValue(undefined),
+      editReply: vi.fn().mockResolvedValue(undefined),
+      user: { id: 'requester', username: 'Requester' },
+      guildId: 'g1',
+      options: { getUser: (_: string) => ({ id: 'u2', username: 'TargetUser' }) },
+    };
+
+    await execute(mockInteraction, mockGameService, true);
+
+    const payload = mockInteraction.editReply.mock.calls[0][0];
+    const embed = payload.embeds[0];
+    const hintField = embed.data.fields.find((f: any) => f.name === 'Hint');
+
+    expect(hintField).toBeDefined();
+    expect(hintField.value).toMatch(/\+10|\+10 levels/i);
+    expect(hintField.value).toMatch(/lose|overflow|cost you/i);
+  });
 });
