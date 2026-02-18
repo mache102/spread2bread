@@ -28,7 +28,7 @@ export async function execute(interaction: CommandInteraction, gameService: Game
 📊 **${playerCount}** players in ${guildName}
 
 **How It Works:**
-• Send messages to earn points from the next 10 responses
+• Send messages to earn jam points from the next 10 responses
 • Build up points to upgrade your bread at the perfect moment
 • Time your upgrades right for massive level bonuses
 • Unlock aesthetic bread types as you level up

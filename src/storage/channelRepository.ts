@@ -1,6 +1,6 @@
 import { getDatabase } from './database';
 import { Channel, TrackedMessage } from '../models';
-import { TRACK_MESSAGE_COUNT } from '../utils/constants';
+import { POINT_DISTRIBUTION_WINDOW } from '../utils/constants';
 
 export class ChannelRepository {
   isChannelActive(channelId: string, guildId: string): boolean {
@@ -45,14 +45,14 @@ export class ChannelRepository {
       VALUES (?, ?, ?, ?, ?, 0)
     `).run(message.messageId, message.channelId, message.guildId, message.userId, message.timestamp);
 
-    // Delete messages beyond TRACK_MESSAGE_COUNT
+    // Delete messages beyond POINT_DISTRIBUTION_WINDOW
     db.prepare(`
       DELETE FROM tracked_messages 
       WHERE channelId = ? AND position >= ?
-    `).run(message.channelId, TRACK_MESSAGE_COUNT);
+    `).run(message.channelId, POINT_DISTRIBUTION_WINDOW);
   }
 
-  getRecentMessages(channelId: string, limit: number = TRACK_MESSAGE_COUNT): TrackedMessage[] {
+  getRecentMessages(channelId: string, limit: number = POINT_DISTRIBUTION_WINDOW): TrackedMessage[] {
     const db = getDatabase();
     return db.prepare(`
       SELECT * FROM tracked_messages 
@@ -67,6 +67,6 @@ export class ChannelRepository {
     db.prepare(`
       DELETE FROM tracked_messages 
       WHERE channelId = ? AND position >= ?
-    `).run(channelId, TRACK_MESSAGE_COUNT);
+    `).run(channelId, POINT_DISTRIBUTION_WINDOW);
   }
 }

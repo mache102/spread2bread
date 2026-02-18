@@ -108,12 +108,13 @@ export function createSuccessEmbed(title: string, message: string): EmbedBuilder
     .setTimestamp();
 }
 
-export function createPenaltyEmbed(username: string, levelsLost: number, newLevel: number, aesthetic: string): EmbedBuilder {
+export function createPenaltyEmbed(username: string, levelsLost: number, oldLevel: number, newLevel: number, aesthetic: string): EmbedBuilder {
   return new EmbedBuilder()
     .setColor(0xFF6B6B)
-    .setTitle('🔥 Bread Overcooked!')
-    .setDescription(`${username}'s bread got too hot and lost **${levelsLost}** level${levelsLost > 1 ? 's' : ''}!\n\nYour points exceeded the maximum. Be careful to upgrade before hitting the limit!`)
+    .setTitle('🍓 Too much jam!')
+    .setDescription(`${username}'s bread got too much jam and dropped from **Level ${oldLevel} → ${newLevel}** (−${levelsLost}).\n\nYour points exceeded the maximum and the meter was reset. Upgrade earlier to avoid penalties!`)
     .addFields(
+      { name: 'Old Level', value: oldLevel.toString(), inline: true },
       { name: 'New Level', value: newLevel.toString(), inline: true },
       { name: 'Bread Type', value: aesthetic, inline: true }
     )

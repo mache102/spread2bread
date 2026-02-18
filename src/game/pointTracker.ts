@@ -1,5 +1,5 @@
 import { TrackedMessage, PenaltyInfo } from '../models';
-import { TRACK_MESSAGE_COUNT, BOOST_MULTIPLIER } from '../utils/constants';
+import { POINT_DISTRIBUTION_WINDOW, BOOST_MULTIPLIER } from '../utils/constants';
 import { ChannelRepository } from '../storage/channelRepository';
 import { PlayerRepository } from '../storage/playerRepository';
 
@@ -20,7 +20,7 @@ export class PointTracker {
     timestamp: number
   ): PenaltyInfo[] {
     // Get recent messages before this one
-    const recentMessages = this.channelRepo.getRecentMessages(channelId, TRACK_MESSAGE_COUNT);
+    const recentMessages = this.channelRepo.getRecentMessages(channelId, POINT_DISTRIBUTION_WINDOW);
     
     // Distribute points to previous message senders and collect penalties
     const penalties = this.distributePoints(recentMessages, guildId, userId);
@@ -51,7 +51,7 @@ export class PointTracker {
       }
       
       // Calculate base points: position 0 = N/N points, position 1 = (N-1)/N points, etc.
-      const basePoints = (TRACK_MESSAGE_COUNT - message.position) / TRACK_MESSAGE_COUNT;
+      const basePoints = (POINT_DISTRIBUTION_WINDOW - message.position) / POINT_DISTRIBUTION_WINDOW;
       
       // Check if the message sender has an active boost
       const sender = this.playerRepo.getOrCreatePlayer(message.userId, guildId);
@@ -64,13 +64,12 @@ export class PointTracker {
       const result = this.playerRepo.addPoints(message.userId, guildId, points);
       
       if (result.penaltyApplied) {
-        // Get updated player to get new level
-        const updatedPlayer = this.playerRepo.getOrCreatePlayer(message.userId, guildId);
+        // Use returned old/new level if available
         penalties.push({
           userId: message.userId,
           levelsLost: result.levelsLost,
-          oldLevel: updatedPlayer.breadLevel + result.levelsLost,
-          newLevel: updatedPlayer.breadLevel,
+          oldLevel: result.oldLevel ?? (this.playerRepo.getOrCreatePlayer(message.userId, guildId).breadLevel + result.levelsLost),
+          newLevel: result.newLevel ?? this.playerRepo.getOrCreatePlayer(message.userId, guildId).breadLevel,
         });
       }
     }

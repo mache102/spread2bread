@@ -1,6 +1,7 @@
 import { CommandInteraction, SlashCommandBuilder, PermissionFlagsBits, ChannelType } from 'discord.js';
 import { GameService } from '../services/gameService';
-import { createSuccessEmbed, createErrorEmbed } from '../utils/embeds';
+import { createSuccessEmbed, createErrorEmbed, createPenaltyEmbed } from '../utils/embeds';
+import { getAesthetic } from '../game/breadManager';
 
 export const data = new SlashCommandBuilder()
   .setName('admin')
@@ -126,11 +127,21 @@ export async function execute(interaction: CommandInteraction, gameService: Game
       
       const actionText = amount >= 0 ? 'Added' : 'Subtracted';
       const absAmount = Math.abs(amount);
-      const embed = createSuccessEmbed(
+      const mainEmbed = createSuccessEmbed(
         'Points Modified',
         `${actionText} ${absAmount} points ${amount >= 0 ? 'to' : 'from'} <@${user.id}>\nNew points: ${result.newPoints}/${result.maxPoints}`
       );
-      await interaction.editReply({ embeds: [embed] });
+
+      const embedsToSend = [mainEmbed];
+
+      // If penalty applied, also include penalty embed in the reply so CLI shows it
+      if (result.penaltyApplied) {
+        const aesthetic = getAesthetic(result.newLevel ?? 1);
+        const penaltyEmbed = createPenaltyEmbed(user.username, result.levelsLost ?? 0, result.oldLevel ?? 1, result.newLevel ?? 1, aesthetic);
+        embedsToSend.push(penaltyEmbed);
+      }
+
+      await interaction.editReply({ embeds: embedsToSend });
     } else if (subcommand === 'give-levels') {
       const user = interaction.options.getUser('user') || interaction.user;
       const amount = interaction.options.getInteger('amount', true);

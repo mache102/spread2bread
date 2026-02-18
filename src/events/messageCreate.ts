@@ -29,7 +29,7 @@ export async function execute(message: Message, gameService: GameService): Promi
     try {
       const aesthetic = getAesthetic(penalty.newLevel);
       const user = await message.client.users.fetch(penalty.userId);
-      const embed = createPenaltyEmbed(user.username, penalty.levelsLost, penalty.newLevel, aesthetic);
+      const embed = createPenaltyEmbed(user.username, penalty.levelsLost, penalty.oldLevel, penalty.newLevel, aesthetic);
       
       // Only send if channel supports sending messages
       if (message.channel.isTextBased() && 'send' in message.channel) {

@@ -1,6 +1,6 @@
 // Game Mechanics Constants
 
-export const TRACK_MESSAGE_COUNT = 10;
+export const POINT_DISTRIBUTION_WINDOW = 10;
 export const INITIAL_BREAD_LEVEL = 1;
 export const INITIAL_MAX_POINTS = 300;
 export const MAX_POINTS_VARIATION_PERCENTAGE = 0.2; // +/- 20% variation for max points on reset

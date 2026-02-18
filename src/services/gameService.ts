@@ -77,13 +77,17 @@ export class GameService {
     return channels.map(c => c.channelId);
   }
 
-  givePoints(userId: string, guildId: string, amount: number): { newPoints: number; maxPoints: number } {
-    const player = this.playerRepo.getOrCreatePlayer(userId, guildId);
-    player.currentPoints = Math.max(0, player.currentPoints + amount);
-    // Cap at maxPoints
-    player.currentPoints = Math.min(player.currentPoints, player.maxPoints);
-    this.playerRepo.updatePlayer(player);
-    return { newPoints: player.currentPoints, maxPoints: player.maxPoints };
+  givePoints(userId: string, guildId: string, amount: number): { newPoints: number; maxPoints: number; penaltyApplied?: boolean; levelsLost?: number; oldLevel?: number; newLevel?: number } {
+    // Use the repository addPoints route so penalty logic is applied consistently
+    const result = this.playerRepo.addPoints(userId, guildId, amount);
+    return {
+      newPoints: result.newPoints,
+      maxPoints: result.maxPoints,
+      penaltyApplied: result.penaltyApplied,
+      levelsLost: result.levelsLost,
+      oldLevel: result.oldLevel,
+      newLevel: result.newLevel,
+    };
   }
 
   giveLevels(userId: string, guildId: string, amount: number): { newLevel: number; aesthetic: string } {

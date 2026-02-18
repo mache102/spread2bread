@@ -106,7 +106,7 @@ Testing infrastructure:
 ### Development Patterns
 - All imports at top of files
 - Magic numbers extracted to [src/utils/constants.ts](src/utils/constants.ts)
-- Game mechanics constants: TRACK_MESSAGE_COUNT, UPGRADE_RANGES, AESTHETIC_MILESTONES
+- Game mechanics constants: POINT_DISTRIBUTION_WINDOW, UPGRADE_RANGES, AESTHETIC_MILESTONES
 - Repository pattern separates data access from business logic
 - Services coordinate between game logic and storage
 

@@ -42,7 +42,7 @@ export class PlayerRepository {
     );
   }
 
-  addPoints(userId: string, guildId: string, points: number): { penaltyApplied: boolean; levelsLost: number } {
+  addPoints(userId: string, guildId: string, points: number): { penaltyApplied: boolean; levelsLost: number; oldLevel?: number; newLevel?: number; newPoints: number; maxPoints: number } {
     // Get player first to check for penalty
     const player = this.getOrCreatePlayer(userId, guildId);
     
@@ -66,12 +66,12 @@ export class PlayerRepository {
       
       this.updatePlayer(player);
       
-      return { penaltyApplied: true, levelsLost };
+      return { penaltyApplied: true, levelsLost, oldLevel, newLevel: player.breadLevel, newPoints: player.currentPoints, maxPoints: player.maxPoints };
     }
     
     // Update player without penalty
     this.updatePlayer(player);
-    return { penaltyApplied: false, levelsLost: 0 };
+    return { penaltyApplied: false, levelsLost: 0, newPoints: player.currentPoints, maxPoints: player.maxPoints };
   }
 
   getTopPlayers(guildId: string, limit: number = 10): Player[] {
