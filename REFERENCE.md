@@ -81,11 +81,12 @@ Build and development scripts defined in [package.json](package.json):
 - `npm start` – Run compiled code
 - `npm test` – Run integration tests with vitest
 - `npm run deploy` – Register Discord slash commands
-- `npm run test-cmd` – CLI command testing harness (no Discord token needed)
+- `npm run test-cmd` – Interactive CLI mock for testing commands locally (no Discord token needed)
 
 Testing infrastructure:
-- [tests/integration/](tests/integration/) – End-to-end command tests
-- [scripts/test-commands.ts](scripts/test-commands.ts) – CLI mock for command testing
+- [tests/integration/](tests/integration/) – End-to-end command tests with vitest
+- [scripts/test-commands.ts](scripts/test-commands.ts) – Interactive CLI with Discord mock and embed-to-plaintext converter
+- Database reset function in [src/storage/database.ts](src/storage/database.ts) ensures test isolation
 
 ## 6. APIs / Integrations
 

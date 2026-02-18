@@ -18,6 +18,17 @@ export function closeDatabase(): void {
   }
 }
 
+export function resetDatabase(): void {
+  if (!db) return;
+  
+  // Clear all tables
+  db.exec(`
+    DELETE FROM players;
+    DELETE FROM tracked_messages;
+    DELETE FROM channels;
+  `);
+}
+
 function initializeSchema(): void {
   if (!db) return;
 

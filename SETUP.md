@@ -61,10 +61,14 @@ npm run deploy
 # Run integration tests
 npm test
 
-# Test commands via CLI (no Discord token needed)
-npm run test-cmd bread
-npm run test-cmd upgrade
-npm run test-cmd messages
+# Test commands via interactive CLI (no Discord token needed)
+npm run test-cmd
+
+# In the CLI, try:
+# /bread, /upgrade, /boost, /leaderboard
+# /admin give-points 150
+# /admin give-levels 5
+# Type 'help' for all commands, 'exit' to quit
 ```
 
 ## Building for Production

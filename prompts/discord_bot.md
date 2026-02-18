@@ -18,7 +18,19 @@ Concise implementation model :
 
 - create `test-commands.ts` so that we can easily test the commands from CLI. 
 
-cmds:
+## Demo section in README.md
+
+Include a **Demo** section that shows:
+1. How to run the mock CLI (`npm run test-cmd`) with sample commands to walk through all features
+2. A placeholder for bot usage screenshots (e.g., `![Bot Usage](docs/screenshot-placeholder.png)`)
+
+The demo section helps users quickly understand and test the bot's functionality.
+
+## Minimum commands neede
+/about and /help are both minimum requirements for commands; /about has bot info (description) and number of playing users in guild, etc.
+/help shows all (non-admin) cmds and how to use.
+
+## package.json
 ```
 "build": "tsc",
 "dev": "tsx watch src/index.ts",
@@ -28,6 +40,7 @@ cmds:
 "test-cmd": "tsx scripts/test-commands.ts"
 ```
 
+## Mock CLI
 test-cmd creates a mock cli and monkey patches a few other discord funcs; example:
 
 ```typescript

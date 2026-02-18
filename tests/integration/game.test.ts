@@ -1,6 +1,6 @@
-import { describe, test, expect, beforeAll, afterAll } from 'vitest';
+import { describe, test, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import { GameService } from '../../src/services/gameService';
-import { getDatabase, closeDatabase } from '../../src/storage/database';
+import { getDatabase, closeDatabase, resetDatabase } from '../../src/storage/database';
 
 describe('Game Integration Tests', () => {
   let gameService: GameService;
@@ -13,6 +13,11 @@ describe('Game Integration Tests', () => {
     process.env.DATABASE_PATH = ':memory:';
     getDatabase();
     gameService = new GameService();
+  });
+
+  beforeEach(() => {
+    // Reset database before each test to avoid UNIQUE constraint errors
+    resetDatabase();
   });
 
   afterAll(() => {
@@ -55,15 +60,24 @@ describe('Game Integration Tests', () => {
   });
 
   test('should return leaderboard sorted by level', () => {
+    // Create some players with different levels
+    gameService.giveLevels('user-1', testGuildId, 10);
+    gameService.giveLevels('user-2', testGuildId, 5);
+    gameService.giveLevels('user-3', testGuildId, 15);
+    
     const leaderboard = gameService.getLeaderboard(testGuildId);
     
     expect(Array.isArray(leaderboard)).toBe(true);
     expect(leaderboard.length).toBeGreaterThan(0);
     
-    // Check if sorted by level
+    // Check if sorted by level (descending)
     for (let i = 1; i < leaderboard.length; i++) {
       expect(leaderboard[i - 1].breadLevel).toBeGreaterThanOrEqual(leaderboard[i].breadLevel);
     }
+    
+    // Verify top player is user-3 with 15 levels
+    expect(leaderboard[0].userId).toBe('user-3');
+    expect(leaderboard[0].breadLevel).toBe(16); // 1 base + 15 given
   });
 
   test('should enable and disable channels', () => {

@@ -29,3 +29,34 @@ Players start with level 1 bread and gain points by having others respond to the
 ## Tech Stack
 
 TypeScript, Discord.js, better-sqlite3, Node.js
+
+## Demo
+
+### Quick Demo with Mock CLI
+
+You can test all features locally without a Discord bot using the interactive CLI:
+
+```bash
+npm run test-cmd
+```
+
+Once started, try these commands in order to walk through all features:
+
+```
+/bread
+/admin give-points 150
+/bread
+/upgrade
+/bread
+/admin give-levels 10
+/bread
+/boost
+/leaderboard
+/admin list
+exit
+```
+
+### Bot Usage Screenshot
+
+![Bot Usage](docs/screenshot-placeholder.png)
+*Screenshot coming soon - bot in action on Discord*
