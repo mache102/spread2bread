@@ -4,6 +4,7 @@ import { GameService } from './services/gameService';
 import { JamBoostService } from './services/jamBoostService';
 import { getDatabase } from './storage/database';
 import { createBoostExpiredEmbed } from './utils/embeds';
+import { GuildRepository } from './storage/guildRepository';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -41,7 +42,7 @@ const jamBoostService = new JamBoostService();
 // Load commands
 const commands = new Collection<string, Command>();
 const commandsPath = path.join(__dirname, 'commands');
-const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js') || file.endsWith('.ts'));
+const commandFiles = fs.readdirSync(commandsPath).filter(file => (file.endsWith('.js') || (file.endsWith('.ts') && !file.endsWith('.d.ts'))));
 
 for (const file of commandFiles) {
   const filePath = path.join(commandsPath, file);
@@ -54,7 +55,7 @@ for (const file of commandFiles) {
 
 // Load events
 const eventsPath = path.join(__dirname, 'events');
-const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js') || file.endsWith('.ts'));
+const eventFiles = fs.readdirSync(eventsPath).filter(file => (file.endsWith('.js') || (file.endsWith('.ts') && !file.endsWith('.d.ts'))));
 
 for (const file of eventFiles) {
   const filePath = path.join(eventsPath, file);
@@ -109,7 +110,7 @@ client.once(Events.ClientReady, () => {
           if (channelId) {
             // Post in configured guild channel if available
             const ch = await client.channels.fetch(channelId).catch(() => null);
-            if (ch && ch.isTextBased && 'send' in ch) {
+            if (ch && typeof (ch as any).isTextBased === 'function' && (ch as any).isTextBased() && 'send' in ch) {
               await (ch as any).send({ embeds: [createBoostExpiredEmbed(user.username)] });
             } else {
               // fallback to DM

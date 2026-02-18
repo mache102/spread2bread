@@ -1,4 +1,4 @@
-import { CommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { GameService } from '../services/gameService';
 import { createBreadStatusEmbed } from '../utils/embeds';
 
@@ -13,7 +13,7 @@ export const data = new SlashCommandBuilder()
   );
 
 export async function execute(
-  interaction: CommandInteraction,
+  interaction: ChatInputCommandInteraction,
   gameService: GameService,
   showMaxPoints: boolean = false
 ): Promise<void> {
