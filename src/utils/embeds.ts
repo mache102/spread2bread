@@ -128,3 +128,11 @@ export function createPenaltyEmbed(username: string, levelsLost: number, oldLeve
     )
     .setTimestamp();
 }
+
+export function createBoostExpiredEmbed(username: string): EmbedBuilder {
+  return new EmbedBuilder()
+    .setColor(EMBED_COLORS.INFO)
+    .setTitle('⏱️ Jam Boost Expired')
+    .setDescription(`${username}, your **Jam Boost** has expired — you are now giving normal points again.`)
+    .setTimestamp();
+}

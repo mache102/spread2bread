@@ -1,6 +1,7 @@
 import { getDatabase } from './database';
 import { Player } from '../models';
 import { INITIAL_BREAD_LEVEL, INITIAL_MAX_POINTS, MAX_POINTS_VARIATION_PERCENTAGE, LEVEL_LOSS_PERCENTAGE } from '../utils/constants';
+import { GuildRepository } from './guildRepository';
 
 export class PlayerRepository {
   getOrCreatePlayer(userId: string, guildId: string): Player {
@@ -11,10 +12,14 @@ export class PlayerRepository {
     `).get(userId, guildId) as Player | undefined;
 
     if (!player) {
+      // Use guild-configured initial max points when creating a new player
+      const guildRepo = new GuildRepository();
+      const initialMax = guildRepo.getInitialMaxPoints(guildId);
+
       db.prepare(`
         INSERT INTO players (userId, guildId, breadLevel, currentPoints, maxPoints, lastUpgradeAt, lastBoostUsed, boostExpiresAt)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-      `).run(userId, guildId, INITIAL_BREAD_LEVEL, 0, INITIAL_MAX_POINTS, 0, 0, 0);
+      `).run(userId, guildId, INITIAL_BREAD_LEVEL, 0, initialMax, 0, 0, 0);
 
       player = db.prepare(`
         SELECT * FROM players WHERE userId = ? AND guildId = ?
@@ -56,11 +61,13 @@ export class PlayerRepository {
       const oldLevel = player.breadLevel;
       player.breadLevel = Math.max(1, player.breadLevel - levelsLost);
       
-      // Reset point meter with randomized maxPoints
+      // Reset point meter with randomized maxPoints (use guild-configured base)
       player.currentPoints = 0;
-      const variation = INITIAL_MAX_POINTS * MAX_POINTS_VARIATION_PERCENTAGE;
+      const guildRepo = new GuildRepository();
+      const base = guildRepo.getInitialMaxPoints(guildId);
+      const variation = base * MAX_POINTS_VARIATION_PERCENTAGE;
       player.maxPoints = Math.floor(
-        INITIAL_MAX_POINTS - variation + Math.random() * (variation * 2)
+        base - variation + Math.random() * (variation * 2)
       );
       player.lastUpgradeAt = Date.now();
       
@@ -82,5 +89,13 @@ export class PlayerRepository {
       ORDER BY breadLevel DESC, currentPoints DESC 
       LIMIT ?
     `).all(guildId, limit) as Player[];
+  }
+
+  getPlayersWithExpiredBoosts(now: number): Player[] {
+    const db = getDatabase();
+    return db.prepare(`
+      SELECT * FROM players
+      WHERE boostExpiresAt > 0 AND boostExpiresAt <= ?
+    `).all(now) as Player[];
   }
 }

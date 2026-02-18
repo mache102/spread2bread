@@ -18,12 +18,12 @@ export class PointTracker {
     guildId: string,
     userId: string,
     timestamp: number
-  ): PenaltyInfo[] {
+  ): { penalties: PenaltyInfo[]; gains: import('../models').PointGain[] } {
     // Get recent messages before this one
     const recentMessages = this.channelRepo.getRecentMessages(channelId, POINT_DISTRIBUTION_WINDOW);
     
-    // Distribute points to previous message senders and collect penalties
-    const penalties = this.distributePoints(recentMessages, guildId, userId);
+    // Distribute points to previous message senders and collect penalties and gains
+    const { penalties, gains } = this.distributePoints(recentMessages, guildId, userId);
     
     // Add this message to tracking
     const newMessage: TrackedMessage = {
@@ -37,12 +37,13 @@ export class PointTracker {
     
     this.channelRepo.addTrackedMessage(newMessage);
     
-    return penalties;
+    return { penalties, gains };
   }
 
-  private distributePoints(messages: TrackedMessage[], guildId: string, currentUserId: string): PenaltyInfo[] {
+  private distributePoints(messages: TrackedMessage[], guildId: string, currentUserId: string): { penalties: PenaltyInfo[]; gains: import('../models').PointGain[] } {
     const now = Date.now();
     const penalties: PenaltyInfo[] = [];
+    const gains: import('../models').PointGain[] = [];
     
     for (const message of messages) {
       // Don't give points to yourself
@@ -62,6 +63,15 @@ export class PointTracker {
       
       // Award points and check for penalty
       const result = this.playerRepo.addPoints(message.userId, guildId, points);
+
+      // Record gain for downstream logging
+      gains.push({
+        userId: message.userId,
+        pointsAwarded: points,
+        newPoints: result.newPoints,
+        maxPoints: result.maxPoints,
+        boostActive: isBoostActive,
+      });
       
       if (result.penaltyApplied) {
         // Use returned old/new level if available
@@ -74,6 +84,6 @@ export class PointTracker {
       }
     }
     
-    return penalties;
+    return { penalties, gains };
   }
 }

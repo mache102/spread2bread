@@ -45,9 +45,15 @@
 
 ### Bread & Points System
 Core game mechanics for tracking bread levels and point accumulation
-- [src/game/breadManager.ts](src/game/breadManager.ts) – Bread level and upgrade logic, randomized max points (300 ±20%)
-- [src/game/pointTracker.ts](src/game/pointTracker.ts) – Message tracking and point calculation
+- [src/game/breadManager.ts](src/game/breadManager.ts) – Bread level and upgrade logic, randomized max points (guild-configurable)
+- [src/game/pointTracker.ts](src/game/pointTracker.ts) – Message tracking and point calculation (now returns per-message point gains for richer logging)
 - [src/game/rangeGenerator.ts](src/game/rangeGenerator.ts) – Dynamic upgrade range generation
+
+Notes:
+- Channels are enabled by default unless explicitly disabled via `/admin disable`.
+- Jam-boost expiry notifications are **disabled by default**. Use `/admin set-expiry-channel` to enable and configure the channel for a guild.
+- Admins can set a per-guild `initialMaxPoints` used for max-point randomization (`/admin set-initial-maxpoints`).
+- Run `npm run dev` to enable `isDev` — additional console logs will show point gains, upgrades, boosts and expirations.
 
 ### Commands
 Player-facing slash commands

@@ -1,6 +1,7 @@
 import { CommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { JamBoostService } from '../services/jamBoostService';
 import { createSuccessEmbed, createErrorEmbed } from '../utils/embeds';
+import { config } from '../config';
 
 export const data = new SlashCommandBuilder()
   .setName('boost')
@@ -22,6 +23,12 @@ export async function execute(interaction: CommandInteraction, jamBoostService: 
     
     if (result.success) {
       const embed = createSuccessEmbed('Jam Boost Activated', result.message);
+
+      // DEV log
+      if (config.isDev) {
+        console.log(`[DEV] Boost activated: ${userId} (${interaction.user.username}) expiresAt=${result.expiresAt}`);
+      }
+
       await interaction.editReply({ embeds: [embed] });
     } else {
       const embed = createErrorEmbed(result.message);

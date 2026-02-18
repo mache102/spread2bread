@@ -54,10 +54,10 @@ export class GameService {
     channelId: string,
     guildId: string,
     userId: string
-  ): PenaltyInfo[] {
+  ): { penalties: PenaltyInfo[]; gains: import('../models').PointGain[] } {
     // Check if channel is active
     if (!this.channelRepo.isChannelActive(channelId, guildId)) {
-      return [];
+      return { penalties: [], gains: [] };
     }
 
     const timestamp = Date.now();

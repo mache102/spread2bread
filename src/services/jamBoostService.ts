@@ -85,4 +85,17 @@ export class JamBoostService {
 
     return { isActive: false };
   }
+
+  // Return players whose boosts have expired but still have a positive boostExpiresAt (so we can notify once)
+  getExpiredBoostPlayers(): import('../models').Player[] {
+    const now = Date.now();
+    return this.playerRepo.getPlayersWithExpiredBoosts(now);
+  }
+
+  // Clear boostExpiresAt after notifying (prevents duplicate notifications)
+  clearBoostExpiration(userId: string, guildId: string): void {
+    const player = this.playerRepo.getOrCreatePlayer(userId, guildId);
+    player.boostExpiresAt = 0;
+    this.playerRepo.updatePlayer(player);
+  }
 }

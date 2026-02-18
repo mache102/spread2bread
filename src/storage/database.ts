@@ -67,5 +67,13 @@ function initializeSchema(): void {
 
     CREATE INDEX IF NOT EXISTS idx_channels_guild 
       ON channels(guildId, isActive);
+
+    -- Per-guild configuration (initial max points, boost expiry notifier)
+    CREATE TABLE IF NOT EXISTS guild_settings (
+      guildId TEXT NOT NULL PRIMARY KEY,
+      initialMaxPoints INTEGER NOT NULL DEFAULT 300,
+      boostExpiryChannelId TEXT,
+      boostExpiryEnabled INTEGER NOT NULL DEFAULT 0
+    );
   `);
 }

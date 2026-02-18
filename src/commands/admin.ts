@@ -2,6 +2,7 @@ import { CommandInteraction, SlashCommandBuilder, PermissionFlagsBits, ChannelTy
 import { GameService } from '../services/gameService';
 import { createSuccessEmbed, createErrorEmbed, createPenaltyEmbed } from '../utils/embeds';
 import { getAesthetic } from '../game/breadManager';
+import { GuildRepository } from '../storage/guildRepository';
 
 export const data = new SlashCommandBuilder()
   .setName('admin')
@@ -69,6 +70,45 @@ export const data = new SlashCommandBuilder()
           .setDescription('The user to modify (defaults to yourself)')
           .setRequired(false)
       )
+  )
+  .addSubcommand(subcommand =>
+    subcommand
+      .setName('set-expiry-channel')
+      .setDescription('Set channel for jam-boost expiry notifications')
+      .addChannelOption(option =>
+        option
+          .setName('channel')
+          .setDescription('Channel to post boost-expiry notifications in')
+          .addChannelTypes(ChannelType.GuildText)
+          .setRequired(true)
+      )
+  )
+  .addSubcommand(subcommand =>
+    subcommand
+      .setName('disable-expiry-notifiers')
+      .setDescription('Disable jam-boost expiry notifications for this guild')
+  )
+  .addSubcommand(subcommand =>
+    subcommand
+      .setName('set-initial-maxpoints')
+      .setDescription('Set the guild\'s initial max points used for randomization (min 10)')
+      .addIntegerOption(option =>
+        option
+          .setName('amount')
+          .setDescription('Initial max points (minimum 10)')
+          .setRequired(true)
+      )
+  )
+  .addSubcommand(subcommand =>
+    subcommand
+      .setName('show-points')
+      .setDescription('View a user\'s current points and maxPoints')
+      .addUserOption(option =>
+        option
+          .setName('user')
+          .setDescription('User to view (defaults to yourself)')
+          .setRequired(false)
+      )
   );
 
 export async function execute(interaction: CommandInteraction, gameService: GameService): Promise<void> {
@@ -129,7 +169,7 @@ export async function execute(interaction: CommandInteraction, gameService: Game
       const absAmount = Math.abs(amount);
       const mainEmbed = createSuccessEmbed(
         'Points Modified',
-        `${actionText} ${absAmount} points ${amount >= 0 ? 'to' : 'from'} <@${user.id}>\nNew points: ${result.newPoints}/???`
+        `${actionText} ${absAmount} points ${amount >= 0 ? 'to' : 'from'} ${user.username}\nNew points: ${result.newPoints}/${result.maxPoints}`
       );
 
       const embedsToSend = [mainEmbed];
@@ -152,8 +192,40 @@ export async function execute(interaction: CommandInteraction, gameService: Game
       const absAmount = Math.abs(amount);
       const embed = createSuccessEmbed(
         'Levels Modified',
-        `${actionText} ${absAmount} level(s) ${amount >= 0 ? 'to' : 'from'} <@${user.id}>\nNew level: ${result.newLevel} ${result.aesthetic}`
+        `${actionText} ${absAmount} level(s) ${amount >= 0 ? 'to' : 'from'} ${user.username}\nNew level: ${result.newLevel} ${result.aesthetic}`
       );
+      await interaction.editReply({ embeds: [embed] });
+    } else if (subcommand === 'set-expiry-channel') {
+      const channel = interaction.options.getChannel('channel', true);
+      const guildRepo = new GuildRepository();
+      guildRepo.setBoostExpiryChannel(guildId, channel.id);
+
+      const embed = createSuccessEmbed('Expiry Notifiers Enabled', `Boost-expiry notifications will be posted in <#${channel.id}>`);
+      await interaction.editReply({ embeds: [embed] });
+    } else if (subcommand === 'disable-expiry-notifiers') {
+      const guildRepo = new GuildRepository();
+      guildRepo.disableBoostExpiryNotifications(guildId);
+
+      const embed = createSuccessEmbed('Expiry Notifiers Disabled', 'Boost-expiry notifications have been disabled for this guild.');
+      await interaction.editReply({ embeds: [embed] });
+    } else if (subcommand === 'set-initial-maxpoints') {
+      const amount = interaction.options.getInteger('amount', true);
+      const guildRepo = new GuildRepository();
+
+      if (amount < 10) {
+        const err = createErrorEmbed('initial max points must be at least 10');
+        await interaction.editReply({ embeds: [err] });
+        return;
+      }
+
+      guildRepo.setInitialMaxPoints(guildId, amount);
+      const embed = createSuccessEmbed('Initial Max Points Updated', `New initial max points: **${amount}**`);
+      await interaction.editReply({ embeds: [embed] });
+    } else if (subcommand === 'show-points') {
+      const user = interaction.options.getUser('user') || interaction.user;
+      const stats = gameService.getPlayerStats(user.id, guildId, false);
+
+      const embed = createSuccessEmbed('Player Points', `${user.username} — **${stats.player.currentPoints}/${stats.player.maxPoints}**`);
       await interaction.editReply({ embeds: [embed] });
     }
   } catch (error) {

@@ -1,6 +1,7 @@
 import { CommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { GameService } from '../services/gameService';
 import { createUpgradeResultEmbed } from '../utils/embeds';
+import { config } from '../config';
 
 export const data = new SlashCommandBuilder()
   .setName('upgrade')
@@ -26,6 +27,11 @@ export async function execute(interaction: CommandInteraction, gameService: Game
       result.aesthetic,
       interaction.user.username
     );
+
+    // DEV log
+    if (config.isDev) {
+      console.log(`[DEV] Upgrade: ${userId} (${interaction.user.username}) ${result.success ? `+${result.levelsGained} → ${result.newLevel}` : 'not ready'}`);
+    }
 
     await interaction.editReply({ embeds: [embed] });
   } catch (error) {

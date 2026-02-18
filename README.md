@@ -27,6 +27,10 @@ Players start with level 1 bread and gain points by having others respond to the
 - `/admin list` - List all active channels (admin only)
 - `/admin give-points` - Give/subtract points from a user (admin only)
 - `/admin give-levels` - Give/subtract levels from a user (admin only)
+- `/admin set-expiry-channel` - Configure channel for jam-boost expiry notifications (disabled by default)
+- `/admin disable-expiry-notifiers` - Disable jam-boost expiry notifications for this guild
+- `/admin set-initial-maxpoints` - Set the guild's initial max points used for randomization (min 10)
+- `/admin show-points` - View a user's current points/maxPoints (admin only)
 
 ## Tech Stack
 

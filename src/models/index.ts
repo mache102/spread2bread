@@ -53,3 +53,11 @@ export interface PenaltyInfo {
   oldLevel: number;
   newLevel: number;
 }
+
+export interface PointGain {
+  userId: string;
+  pointsAwarded: number;
+  newPoints: number;
+  maxPoints: number;
+  boostActive: boolean;
+}

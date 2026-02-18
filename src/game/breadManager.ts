@@ -66,16 +66,14 @@ export function attemptUpgrade(player: Player): { success: boolean; levelsGained
 
 export function resetPointMeter(player: Player): void {
   player.currentPoints = 0;
-  // Randomize maxPoints: 300 +/- 20% (240 to 360)
-  
-  player.maxPoints = getRandomizedMaxPoints();
-
+  // Randomize maxPoints around the player's base/max (uses current max as baseline)
+  player.maxPoints = getRandomizedMaxPoints(player.maxPoints);
 }
 
 
-function getRandomizedMaxPoints(): number {
-  const variation = INITIAL_MAX_POINTS * MAX_POINTS_VARIATION_PERCENTAGE;
+function getRandomizedMaxPoints(base: number): number {
+  const variation = base * MAX_POINTS_VARIATION_PERCENTAGE;
   return Math.floor(
-    INITIAL_MAX_POINTS - variation + Math.random() * (variation * 2)
+    base - variation + Math.random() * (variation * 2)
   );
 }

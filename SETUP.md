@@ -40,12 +40,20 @@ mkdir -p data
 ## Running
 
 ```bash
-# Development mode with auto-reload
+# Development mode with auto-reload (sets NODE_ENV=development)
 npm run dev
 
 # Production mode (build first with npm run build)
 npm start
 ```
+
+### Dev mode behavior
+- When running with `npm run dev` (`NODE_ENV=development`) the app sets an internal `isDev` flag.
+- Dev mode enables additional console logging useful for debugging:
+  - Logs point gains (user id + username), upgrades, over-jams, boost activations and boost expirations.
+  - These logs are only printed when `isDev` is true and do not affect production behavior.
+- You can also force dev mode by setting `DEV=1` in your environment.
+
 
 ## Deploy Commands
 

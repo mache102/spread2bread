@@ -1,8 +1,9 @@
-import { Client, Collection, GatewayIntentBits } from 'discord.js';
+import { Client, Collection, GatewayIntentBits, Events } from 'discord.js';
 import { config, validateConfig } from './config';
 import { GameService } from './services/gameService';
 import { JamBoostService } from './services/jamBoostService';
 import { getDatabase } from './storage/database';
+import { createBoostExpiredEmbed } from './utils/embeds';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -78,6 +79,61 @@ for (const file of eventFiles) {
 client.login(config.discordToken).catch(error => {
   console.error('Failed to login:', error);
   process.exit(1);
+});
+
+// After ready, start background tasks (boost-expiry notifier)
+client.once(Events.ClientReady, () => {
+  const jamBoostService = new JamBoostService();
+
+  // Check every 60s for expired boosts we haven't notified yet
+  setInterval(async () => {
+    try {
+      const expired = jamBoostService.getExpiredBoostPlayers();
+      if (expired.length === 0) return;
+
+      const { GuildRepository } = require('./storage/guildRepository');
+      const guildRepo = new GuildRepository();
+
+      for (const p of expired) {
+        try {
+          // Only notify if guild has expiry notifications enabled
+          if (!guildRepo.isBoostExpiryEnabled(p.guildId)) {
+            // Still clear so it won't persist as "expired" every check
+            jamBoostService.clearBoostExpiration(p.userId, p.guildId);
+            continue;
+          }
+
+          const user = await client.users.fetch(p.userId);
+          const channelId = guildRepo.getBoostExpiryChannelId(p.guildId);
+
+          if (channelId) {
+            // Post in configured guild channel if available
+            const ch = await client.channels.fetch(channelId).catch(() => null);
+            if (ch && ch.isTextBased && 'send' in ch) {
+              await (ch as any).send({ embeds: [createBoostExpiredEmbed(user.username)] });
+            } else {
+              // fallback to DM
+              await user.send({ embeds: [createBoostExpiredEmbed(user.username)] });
+            }
+          } else {
+            // Default behavior: DM the user
+            await user.send({ embeds: [createBoostExpiredEmbed(user.username)] });
+          }
+
+          // Clear the boost expiration so we don't notify again
+          jamBoostService.clearBoostExpiration(p.userId, p.guildId);
+
+          if (config.isDev) {
+            console.log(`[DEV] Boost expired: ${p.userId} (${user.username})`);
+          }
+        } catch (err) {
+          console.error('Failed to notify user about boost expiry:', err);
+        }
+      }
+    } catch (err) {
+      console.error('Error checking expired boosts:', err);
+    }
+  }, 60_000);
 });
 
 // Graceful shutdown
