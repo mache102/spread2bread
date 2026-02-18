@@ -4,7 +4,11 @@ A Discord bot game where players compete to achieve the highest level bread on t
 
 ## Game Concept
 
-Players start with level 1 bread and gain points by having others respond to their messages. When you send a message, the next N messages from other players award you points in decreasing amounts. Build up your points to level up your bread, but timing is everything—upgrade at the perfect moment for massive level gains, or miss the window and lose progress!
+Players start with level 1 bread and gain points by having others respond to their messages. 
+
+When you send a message, the next N messages from other players award you points in decreasing amounts. 
+
+Build up your points to level up your bread, but timing is everything—upgrade at the perfect moment for massive level gains, or miss the window and lose progress!
 
 ## Key Features
 
@@ -22,6 +26,8 @@ Players start with level 1 bread and gain points by having others respond to the
 - `/upgrade` - Attempt to level up your bread
 - `/boost` - Activate your daily jam boost (3x points for 15 minutes)
 - `/leaderboard` - See server rankings
+
+### Commands (Admin)
 - `/admin enable` - Enable bread game in a channel (admin only)
 - `/admin disable` - Disable bread game in a channel (admin only)
 - `/admin list` - List all active channels (admin only)
@@ -29,8 +35,13 @@ Players start with level 1 bread and gain points by having others respond to the
 - `/admin give-levels` - Give/subtract levels from a user (admin only)
 - `/admin set-expiry-channel` - Configure channel for jam-boost expiry notifications (disabled by default)
 - `/admin disable-expiry-notifiers` - Disable jam-boost expiry notifications for this guild
-- `/admin set-initial-maxpoints` - Set the guild's initial max points used for randomization (min 10)
+- `/admin set-initial-maxpoints` - Set the guild's initial max points (run ceiling) used for randomization (min 10)
 - `/admin show-points` - View a user's current points/maxPoints (admin only)
+
+
+#### What is 'max points' (run ceiling)?
+
+The closer a player's current points is to their current run ceiling (RC), the more levels they gain upon an upgrade. But go over RC and they lose levels. RC randomizes to `initial_max_points` +- 20% every time a player upgrades or loses levels. Players can't see their RC, but get a meter showing how close they are.
 
 ## Tech Stack
 
