@@ -101,31 +101,6 @@ max. 100 lines. If the setup reaches beyond 100 lines, then create `setup.sh`-li
 # Common setups
 
 ## Discord bot (typescript)
-typescript, nodejs, npm, better sqlite3 (may need to approve-build and rebuild), 
-`src/` architecture:
-```
-commands  config.ts  events  game  index.ts  models  services  storage  utils
-```
-include top-level integration tests (tests /integration) and wrapper/patcher to test the same commands from cli. 
-
-Concise implementation model :
-- Command/event driven: `commands/` holds slash handlers, `events/` handles Discord events, `services/` contains business logic orchestration.
-- Game core in `game/`
-- Persistence: `storage/` uses better-sqlite3 repositories; tests run against a test DB.
-- UI/embeds: `src/utils/embeds.ts` centralizes message formatting.
-- Test harness: `tests/integration/*` plus `scripts/test-commands.ts` (CLI mock `test-cmd`) for end-to-end command testing.
-- Admin & notifications: admin subcommands, notification-channel + per-user toggle, and simulate tools for resource testing.
-
-- create `test-commands.ts` so that we can easily test the commands from CLI. 
-
-cmds:
-```
-"build": "tsc",
-"dev": "tsx watch src/index.ts",
-"start": "node dist/index.js",
-"deploy": "tsx scripts/deploy-commands.ts",
-"test": "vitest",
-"test-cmd": "tsx scripts/test-commands.ts"
-```
+see discord_bot.md
 ## Other
 WIP...
