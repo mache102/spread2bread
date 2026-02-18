@@ -13,8 +13,34 @@ export function getDatabase(dbPath?: string): Database.Database {
 
 export function closeDatabase(): void {
   if (db) {
-    db.close();
+    try {
+      db.close();
+    } catch (err) {
+      // ignore close errors
+    }
     db = null;
+  }
+}
+
+/**
+ * Execute a callback with the active Database. If a write fails because the
+ * underlying database file was moved/deleted (SQLite error code
+ * `SQLITE_READONLY_DBMOVED`), close and reopen the database and retry once.
+ */
+export function withDatabaseRetry<T>(fn: (db: Database.Database) => T, retries = 1): T {
+  try {
+    const d = getDatabase();
+    return fn(d);
+  } catch (err: any) {
+    // If the DB file was moved/deleted while process was running, better-sqlite3
+    // surfaces SQLITE_READONLY_DBMOVED on subsequent writes. Recover by
+    // closing and reopening the DB and retrying once.
+    if (retries > 0 && err && err.code === 'SQLITE_READONLY_DBMOVED') {
+      closeDatabase();
+      const d = getDatabase();
+      return fn(d);
+    }
+    throw err;
   }
 }
 

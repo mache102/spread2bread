@@ -32,30 +32,27 @@ export class GuildRepository {
 
   setInitialMaxPoints(guildId: string, amount: number): void {
     if (amount < 10) throw new Error('initialMaxPoints must be at least 10');
-    const db = getDatabase();
-    db.prepare(`
+    withDatabaseRetry(db => db.prepare(`
       INSERT INTO guild_settings (guildId, initialMaxPoints)
       VALUES (?, ?)
       ON CONFLICT(guildId) DO UPDATE SET initialMaxPoints = ?
-    `).run(guildId, amount, amount);
+    `).run(guildId, amount, amount));
   }
 
   setBoostExpiryChannel(guildId: string, channelId: string): void {
-    const db = getDatabase();
-    db.prepare(`
+    withDatabaseRetry(db => db.prepare(`
       INSERT INTO guild_settings (guildId, boostExpiryChannelId, boostExpiryEnabled)
       VALUES (?, ?, 1)
       ON CONFLICT(guildId) DO UPDATE SET boostExpiryChannelId = ?, boostExpiryEnabled = 1
-    `).run(guildId, channelId, channelId);
+    `).run(guildId, channelId, channelId));
   }
 
   disableBoostExpiryNotifications(guildId: string): void {
-    const db = getDatabase();
-    db.prepare(`
+    withDatabaseRetry(db => db.prepare(`
       INSERT INTO guild_settings (guildId, boostExpiryEnabled, boostExpiryChannelId)
       VALUES (?, 0, NULL)
       ON CONFLICT(guildId) DO UPDATE SET boostExpiryEnabled = 0, boostExpiryChannelId = NULL
-    `).run(guildId);
+    `).run(guildId));
   }
 
   isBoostExpiryEnabled(guildId: string): boolean {

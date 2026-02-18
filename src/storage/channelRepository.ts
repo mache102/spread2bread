@@ -14,12 +14,11 @@ export class ChannelRepository {
   }
 
   setChannelActive(channelId: string, guildId: string, isActive: boolean): void {
-    const db = getDatabase();
-    db.prepare(`
+    withDatabaseRetry(db => db.prepare(`
       INSERT INTO channels (channelId, guildId, isActive)
       VALUES (?, ?, ?)
       ON CONFLICT(channelId, guildId) DO UPDATE SET isActive = ?
-    `).run(channelId, guildId, isActive ? 1 : 0, isActive ? 1 : 0);
+    `).run(channelId, guildId, isActive ? 1 : 0, isActive ? 1 : 0));
   }
 
   getActiveChannels(guildId: string): Channel[] {
@@ -31,26 +30,24 @@ export class ChannelRepository {
   }
 
   addTrackedMessage(message: TrackedMessage): void {
-    const db = getDatabase();
-    
     // First, increment position of existing messages in this channel
-    db.prepare(`
+    withDatabaseRetry(db => db.prepare(`
       UPDATE tracked_messages 
       SET position = position + 1 
       WHERE channelId = ?
-    `).run(message.channelId);
+    `).run(message.channelId));
 
     // Insert the new message at position 0
-    db.prepare(`
+    withDatabaseRetry(db => db.prepare(`
       INSERT INTO tracked_messages (messageId, channelId, guildId, userId, timestamp, position)
       VALUES (?, ?, ?, ?, ?, 0)
-    `).run(message.messageId, message.channelId, message.guildId, message.userId, message.timestamp);
+    `).run(message.messageId, message.channelId, message.guildId, message.userId, message.timestamp));
 
     // Delete messages beyond POINT_DISTRIBUTION_WINDOW
-    db.prepare(`
+    withDatabaseRetry(db => db.prepare(`
       DELETE FROM tracked_messages 
       WHERE channelId = ? AND position >= ?
-    `).run(message.channelId, POINT_DISTRIBUTION_WINDOW);
+    `).run(message.channelId, POINT_DISTRIBUTION_WINDOW));
   }
 
   getRecentMessages(channelId: string, limit: number = POINT_DISTRIBUTION_WINDOW): TrackedMessage[] {

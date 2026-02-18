@@ -5,33 +5,30 @@ import { GuildRepository } from './guildRepository';
 
 export class PlayerRepository {
   getOrCreatePlayer(userId: string, guildId: string): Player {
-    const db = getDatabase();
-    
-    let player = db.prepare(`
+    let player = withDatabaseRetry(db => db.prepare(`
       SELECT * FROM players WHERE userId = ? AND guildId = ?
-    `).get(userId, guildId) as Player | undefined;
+    `).get(userId, guildId) as Player | undefined);
 
     if (!player) {
       // Use guild-configured initial max points when creating a new player
       const guildRepo = new GuildRepository();
       const initialMax = guildRepo.getInitialMaxPoints(guildId);
 
-      db.prepare(`
+      withDatabaseRetry(db => db.prepare(`
         INSERT INTO players (userId, guildId, breadLevel, currentPoints, maxPoints, lastUpgradeAt, lastBoostUsed, boostExpiresAt)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-      `).run(userId, guildId, INITIAL_BREAD_LEVEL, 0, initialMax, 0, 0, 0);
+      `).run(userId, guildId, INITIAL_BREAD_LEVEL, 0, initialMax, 0, 0, 0));
 
-      player = db.prepare(`
+      player = withDatabaseRetry(db => db.prepare(`
         SELECT * FROM players WHERE userId = ? AND guildId = ?
-      `).get(userId, guildId) as Player;
+      `).get(userId, guildId) as Player);
     }
 
     return player;
   }
 
   updatePlayer(player: Player): void {
-    const db = getDatabase();
-    db.prepare(`
+    withDatabaseRetry(db => db.prepare(`
       UPDATE players 
       SET breadLevel = ?, currentPoints = ?, maxPoints = ?, lastUpgradeAt = ?, lastBoostUsed = ?, boostExpiresAt = ?
       WHERE userId = ? AND guildId = ?
@@ -44,7 +41,7 @@ export class PlayerRepository {
       player.boostExpiresAt,
       player.userId,
       player.guildId
-    );
+    ));
   }
 
   addPoints(userId: string, guildId: string, points: number): { penaltyApplied: boolean; levelsLost: number; oldLevel?: number; newLevel?: number; newPoints: number; maxPoints: number } {
