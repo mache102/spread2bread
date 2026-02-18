@@ -129,7 +129,7 @@ export async function execute(interaction: CommandInteraction, gameService: Game
       const absAmount = Math.abs(amount);
       const mainEmbed = createSuccessEmbed(
         'Points Modified',
-        `${actionText} ${absAmount} points ${amount >= 0 ? 'to' : 'from'} <@${user.id}>\nNew points: ${result.newPoints}/${result.maxPoints}`
+        `${actionText} ${absAmount} points ${amount >= 0 ? 'to' : 'from'} <@${user.id}>\nNew points: ${result.newPoints}/???`
       );
 
       const embedsToSend = [mainEmbed];
