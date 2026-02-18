@@ -164,7 +164,7 @@ When implementing changes please follow this lightweight workflow so history and
 ## Quick checklist for PR reviewers
 - [ ] Does the branch have a descriptive title and small, focused changes?
 - [ ] Are tests added/updated and passing locally?
-- [ ] Does `npm run build` succeed without errors?
+- [ ] Does `npm run build`, `npm run start`, `npm run dev`, `npm run test` succeed without errors?
 - [ ] No secrets or DB files included in the diff?
 - [ ] Documentation and prompts updated when behavior or API changes were made?
 - [ ] Recommended: squash/rebase commits to keep history clean (project preference applies).
