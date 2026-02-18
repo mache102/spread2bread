@@ -40,34 +40,34 @@ export const data = new SlashCommandBuilder()
     subcommand
       .setName('give-points')
       .setDescription('Give or subtract points from a user')
-      .addUserOption(option =>
-        option
-          .setName('user')
-          .setDescription('The user to modify (defaults to yourself)')
-          .setRequired(false)
-      )
       .addIntegerOption(option =>
         option
           .setName('amount')
           .setDescription('Amount of points to give (negative to subtract)')
           .setRequired(true)
       )
-  )
-  .addSubcommand(subcommand =>
-    subcommand
-      .setName('give-levels')
-      .setDescription('Give or subtract bread levels from a user')
       .addUserOption(option =>
         option
           .setName('user')
           .setDescription('The user to modify (defaults to yourself)')
           .setRequired(false)
       )
+  )
+  .addSubcommand(subcommand =>
+    subcommand
+      .setName('give-levels')
+      .setDescription('Give or subtract bread levels from a user')
       .addIntegerOption(option =>
         option
           .setName('amount')
           .setDescription('Amount of levels to give (negative to subtract, min level is 1)')
           .setRequired(true)
+      )
+      .addUserOption(option =>
+        option
+          .setName('user')
+          .setDescription('The user to modify (defaults to yourself)')
+          .setRequired(false)
       )
   );
 
