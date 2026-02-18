@@ -22,7 +22,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
       {
         name: '📊 Game Commands',
         value: 
-          '`/bread` - Check your bread level and jam meter\n' +
+          '`/bread [user]` - Check your or another user\'s bread level and jam meter (won\'t ping them)\n' +
           '`/upgrade` - Attempt to level up your bread (timing is key!)\n' +
           '`/boost` - Activate your daily jam boost (' + BOOST_MULTIPLIER + 'x points, ' + (BOOST_DURATION_MS / MS_PER_MINUTE) + ' min)\n' +
           '`/leaderboard` - View the server\'s top bread masters',

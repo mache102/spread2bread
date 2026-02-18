@@ -18,7 +18,7 @@ Players start with level 1 bread and gain points by having others respond to the
 
 - `/help` - View all available commands and usage guide
 - `/about` - Learn about the bot and see player statistics
-- `/bread` - View your bread level and jam meter
+- `/bread [user]` - View your or another user's bread level and jam meter (won't ping them)
 - `/upgrade` - Attempt to level up your bread
 - `/boost` - Activate your daily jam boost (3x points for 15 minutes)
 - `/leaderboard` - See server rankings
@@ -47,7 +47,7 @@ Once started, try these commands in order to walk through all features:
 ```
 /help
 /about
-/bread
+/bread @someone
 /admin give-points 150
 /bread
 /upgrade

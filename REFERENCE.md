@@ -53,7 +53,7 @@ Core game mechanics for tracking bread levels and point accumulation
 Player-facing slash commands
 - [src/commands/help.ts](src/commands/help.ts) – Display all commands and usage guide
 - [src/commands/about.ts](src/commands/about.ts) – Bot information and player statistics
-- [src/commands/bread.ts](src/commands/bread.ts) – Display bread status (supports test mode for showing max points and ranges)
+- [src/commands/bread.ts](src/commands/bread.ts) – Display bread status for yourself or another user (optional `user` argument; won’t ping them). Supports test mode for showing max points and ranges
 - [src/commands/upgrade.ts](src/commands/upgrade.ts) – Level up bread
 - [src/commands/leaderboard.ts](src/commands/leaderboard.ts) – Server rankings
 - [src/commands/boost.ts](src/commands/boost.ts) – Activate daily jam boost
