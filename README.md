@@ -16,6 +16,8 @@ Players start with level 1 bread and gain points by having others respond to the
 
 ## Commands
 
+- `/help` - View all available commands and usage guide
+- `/about` - Learn about the bot and see player statistics
 - `/bread` - View your bread level and hotness meter
 - `/upgrade` - Attempt to level up your bread
 - `/boost` - Activate your daily jam boost (3x points for 15 minutes)
@@ -43,6 +45,8 @@ npm run test-cmd
 Once started, try these commands in order to walk through all features:
 
 ```
+/help
+/about
 /bread
 /admin give-points 150
 /bread

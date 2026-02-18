@@ -15,9 +15,9 @@ export class GameService {
     this.pointTracker = new PointTracker(this.channelRepo, this.playerRepo);
   }
 
-  getPlayerStats(userId: string, guildId: string): PlayerStats {
+  getPlayerStats(userId: string, guildId: string, includeRanges: boolean = false): PlayerStats {
     const player = this.playerRepo.getOrCreatePlayer(userId, guildId);
-    return getPlayerStats(player);
+    return getPlayerStats(player, includeRanges);
   }
 
   upgradePlayerBread(userId: string, guildId: string): { 

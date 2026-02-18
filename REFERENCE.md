@@ -29,7 +29,7 @@
 - **Persistence:** SQLite via [src/storage/](src/storage/) repositories
 
 ### Core Utilities
-- [src/utils/embeds.ts](src/utils/embeds.ts) – Discord embed formatting
+- [src/utils/embeds.ts](src/utils/embeds.ts) – Discord embed formatting (supports test mode for showing/hiding max points)
 - [src/utils/constants.ts](src/utils/constants.ts) – Game constants and thresholds
 
 ## 3. Commonly Used Styles
@@ -45,13 +45,15 @@
 
 ### Bread & Points System
 Core game mechanics for tracking bread levels and point accumulation
-- [src/game/breadManager.ts](src/game/breadManager.ts) – Bread level and upgrade logic
+- [src/game/breadManager.ts](src/game/breadManager.ts) – Bread level and upgrade logic, randomized max points (300 ±20%)
 - [src/game/pointTracker.ts](src/game/pointTracker.ts) – Message tracking and point calculation
 - [src/game/rangeGenerator.ts](src/game/rangeGenerator.ts) – Dynamic upgrade range generation
 
 ### Commands
 Player-facing slash commands
-- [src/commands/bread.ts](src/commands/bread.ts) – Display bread status
+- [src/commands/help.ts](src/commands/help.ts) – Display all commands and usage guide
+- [src/commands/about.ts](src/commands/about.ts) – Bot information and player statistics
+- [src/commands/bread.ts](src/commands/bread.ts) – Display bread status (supports test mode for showing max points and ranges)
 - [src/commands/upgrade.ts](src/commands/upgrade.ts) – Level up bread
 - [src/commands/leaderboard.ts](src/commands/leaderboard.ts) – Server rankings
 - [src/commands/boost.ts](src/commands/boost.ts) – Activate daily jam boost

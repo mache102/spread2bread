@@ -18,7 +18,7 @@ export function getAesthetic(level: number): string {
   return AESTHETIC_MILESTONES[0].name;
 }
 
-export function getPlayerStats(player: Player): PlayerStats {
+export function getPlayerStats(player: Player, includeRanges: boolean = false): PlayerStats {
   const ranges = generateUpgradeRanges(player.maxPoints);
   const currentRange = getCurrentRange(player.currentPoints, ranges);
   
@@ -42,6 +42,7 @@ export function getPlayerStats(player: Player): PlayerStats {
     hotnessBar,
     canUpgrade,
     isBoosted,
+    upgradeRanges: includeRanges ? ranges : undefined,
   };
 }
 
@@ -73,6 +74,10 @@ export function attemptUpgrade(player: Player): { success: boolean; levelsGained
 
 export function resetPointMeter(player: Player): void {
   player.currentPoints = 0;
-  player.maxPoints = INITIAL_MAX_POINTS;
+  // Randomize maxPoints: 300 +/- 20% (240 to 360)
+  const variation = INITIAL_MAX_POINTS * 0.2;
+  player.maxPoints = Math.floor(
+    INITIAL_MAX_POINTS - variation + Math.random() * (variation * 2)
+  );
   player.lastUpgradeAt = Date.now();
 }

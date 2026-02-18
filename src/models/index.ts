@@ -38,6 +38,7 @@ export interface PlayerStats {
   hotnessBar: string;
   canUpgrade: boolean;
   isBoosted: boolean;
+  upgradeRanges?: UpgradeRange[];
 }
 
 export interface LeaderboardEntry {

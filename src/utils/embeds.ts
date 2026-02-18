@@ -1,14 +1,18 @@
 import { EmbedBuilder } from 'discord.js';
 import { PlayerStats, LeaderboardEntry } from '../models';
 
-export function createBreadStatusEmbed(stats: PlayerStats, username: string): EmbedBuilder {
+export function createBreadStatusEmbed(stats: PlayerStats, username: string, showMaxPoints: boolean = false): EmbedBuilder {
+  const pointsDisplay = showMaxPoints 
+    ? `${stats.player.currentPoints}/${stats.player.maxPoints}`
+    : `${stats.player.currentPoints}/???`;
+  
   const embed = new EmbedBuilder()
     .setColor(stats.isBoosted ? 0xFF6B6B : 0x3498DB)
     .setTitle(`${username}'s Bread`)
     .addFields(
       { name: 'Bread Type', value: stats.aesthetic, inline: true },
       { name: 'Level', value: stats.player.breadLevel.toString(), inline: true },
-      { name: 'Points', value: `${stats.player.currentPoints}/${stats.player.maxPoints}`, inline: true },
+      { name: 'Points', value: pointsDisplay, inline: true },
       { name: 'Hotness', value: stats.hotnessLevel, inline: false },
       { name: 'Meter', value: stats.hotnessBar, inline: false }
     )
@@ -16,6 +20,14 @@ export function createBreadStatusEmbed(stats: PlayerStats, username: string): Em
 
   if (stats.isBoosted) {
     embed.setDescription('🔥 **JAM BOOST ACTIVE** - Giving 3x points to others!');
+  }
+  
+  // Add upgrade ranges if provided (test mode)
+  if (stats.upgradeRanges && showMaxPoints) {
+    const rangeText = stats.upgradeRanges
+      .map(r => `${r.min}-${r.max}: ${r.levelBonus > 0 ? `+${r.levelBonus} lvl` : r.hotnessLevel}`)
+      .join('\n');
+    embed.addFields({ name: 'Upgrade Ranges (Test Mode)', value: `\`\`\`\n${rangeText}\n\`\`\``, inline: false });
   }
 
   return embed;
