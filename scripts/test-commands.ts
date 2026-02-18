@@ -1,9 +1,11 @@
+// Set test mode BEFORE any imports to bypass env var requirements
+process.env.TEST_MODE = '1';
+process.env.DATABASE_PATH = ':memory:';
+
 import { GameService } from '../src/services/gameService';
 import { JamBoostService } from '../src/services/jamBoostService';
 import { getDatabase, closeDatabase } from '../src/storage/database';
 
-// Initialize test database
-process.env.DATABASE_PATH = ':memory:';
 getDatabase();
 
 const gameService = new GameService();

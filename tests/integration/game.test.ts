@@ -1,3 +1,4 @@
+import { describe, test, expect, beforeAll, afterAll } from 'vitest';
 import { GameService } from '../../src/services/gameService';
 import { getDatabase, closeDatabase } from '../../src/storage/database';
 
@@ -8,6 +9,7 @@ describe('Game Integration Tests', () => {
   const testChannelId = 'test-channel-789';
 
   beforeAll(() => {
+    process.env.TEST_MODE = '1';
     process.env.DATABASE_PATH = ':memory:';
     getDatabase();
     gameService = new GameService();

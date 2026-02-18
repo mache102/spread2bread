@@ -54,7 +54,8 @@ Player-facing slash commands
 - [src/commands/bread.ts](src/commands/bread.ts) – Display bread status
 - [src/commands/upgrade.ts](src/commands/upgrade.ts) – Level up bread
 - [src/commands/leaderboard.ts](src/commands/leaderboard.ts) – Server rankings
-- [src/commands/admin.ts](src/commands/admin.ts) – Admin channel configuration
+- [src/commands/boost.ts](src/commands/boost.ts) – Activate daily jam boost
+- [src/commands/admin.ts](src/commands/admin.ts) – Admin channel configuration, give points/levels
 
 ### Event Handlers
 Discord event processing
@@ -76,11 +77,11 @@ Database access via repositories
 
 Build and development scripts defined in [package.json](package.json):
 - `npm run build` – Compile TypeScript
-- `npm run dev` – Development with ts-node-dev
+- `npm run dev` – Development with tsx watch mode
 - `npm start` – Run compiled code
-- `npm test` – Run integration tests
-- `npm run deploy-commands` – Register Discord slash commands
-- `npm run test-cmd` – CLI command testing harness
+- `npm test` – Run integration tests with vitest
+- `npm run deploy` – Register Discord slash commands
+- `npm run test-cmd` – CLI command testing harness (no Discord token needed)
 
 Testing infrastructure:
 - [tests/integration/](tests/integration/) – End-to-end command tests

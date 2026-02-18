@@ -33,9 +33,12 @@ export const AESTHETIC_MILESTONES = [
   { level: 250, name: '🥨 Pretzel' },
   { level: 500, name: '🎂 Cake' },
   { level: 1000, name: '👑 Royal Bread' },
-  { level: 2500, name: '💎 Diamond Bread' },
-  { level: 5000, name: '🌟 Celestial Bread' },
-  { level: 10000, name: '🌌 Cosmic Bread' },
+  { level: 2000, name: '💎 Diamond Bread' },
+  { level: 3000, name: '🚀 Rocket Bread' },
+  { level: 4000, name: '🌟 Celestial Bread' },
+  { level: 5000, name: '🌌 Cosmic Bread' },
+  { level: 7500, name: '🔥 Inferno Bread' },
+  { level: 10000, name: '♾️ Infinity Bread' },
 ];
 
 // Range Generation

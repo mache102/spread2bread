@@ -9,6 +9,8 @@ export const config = {
   databasePath: process.env.DATABASE_PATH || './data/spread2bread.db',
 };
 
-if (!config.discordToken || !config.clientId) {
-  throw new Error('Missing required environment variables: DISCORD_TOKEN and CLIENT_ID');
+export function validateConfig(): void {
+  if (!config.discordToken || !config.clientId) {
+    throw new Error('Missing required environment variables: DISCORD_TOKEN and CLIENT_ID');
+  }
 }

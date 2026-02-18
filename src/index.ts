@@ -1,10 +1,13 @@
 import { Client, Collection, GatewayIntentBits } from 'discord.js';
-import { config } from './config';
+import { config, validateConfig } from './config';
 import { GameService } from './services/gameService';
 import { JamBoostService } from './services/jamBoostService';
 import { getDatabase } from './storage/database';
 import * as fs from 'fs';
 import * as path from 'path';
+
+// Validate configuration before proceeding
+validateConfig();
 
 interface Command {
   data: {

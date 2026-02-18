@@ -52,7 +52,7 @@ npm start
 Register slash commands with Discord:
 
 ```bash
-npm run deploy-commands
+npm run deploy
 ```
 
 ## Testing
@@ -61,9 +61,10 @@ npm run deploy-commands
 # Run integration tests
 npm test
 
-# Test commands via CLI
+# Test commands via CLI (no Discord token needed)
 npm run test-cmd bread
 npm run test-cmd upgrade
+npm run test-cmd messages
 ```
 
 ## Building for Production

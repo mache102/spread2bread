@@ -34,6 +34,40 @@ export const data = new SlashCommandBuilder()
     subcommand
       .setName('list')
       .setDescription('List all enabled channels')
+  )
+  .addSubcommand(subcommand =>
+    subcommand
+      .setName('give-points')
+      .setDescription('Give or subtract points from a user')
+      .addUserOption(option =>
+        option
+          .setName('user')
+          .setDescription('The user to modify (defaults to yourself)')
+          .setRequired(false)
+      )
+      .addIntegerOption(option =>
+        option
+          .setName('amount')
+          .setDescription('Amount of points to give (negative to subtract)')
+          .setRequired(true)
+      )
+  )
+  .addSubcommand(subcommand =>
+    subcommand
+      .setName('give-levels')
+      .setDescription('Give or subtract bread levels from a user')
+      .addUserOption(option =>
+        option
+          .setName('user')
+          .setDescription('The user to modify (defaults to yourself)')
+          .setRequired(false)
+      )
+      .addIntegerOption(option =>
+        option
+          .setName('amount')
+          .setDescription('Amount of levels to give (negative to subtract, min level is 1)')
+          .setRequired(true)
+      )
   );
 
 export async function execute(interaction: CommandInteraction, gameService: GameService): Promise<void> {
@@ -47,14 +81,15 @@ export async function execute(interaction: CommandInteraction, gameService: Game
       return;
     }
 
-    const subcommand = interaction.options.data[0]?.name;
+    if (!interaction.isChatInputCommand()) {
+      await interaction.editReply('Invalid command type.');
+      return;
+    }
+
+    const subcommand = interaction.options.getSubcommand();
 
     if (subcommand === 'enable') {
-      const channel = interaction.options.data[0].options?.[0].channel;
-      if (!channel) {
-        await interaction.editReply('Invalid channel provided.');
-        return;
-      }
+      const channel = interaction.options.getChannel('channel', true);
 
       gameService.enableChannel(channel.id, guildId);
       const embed = createSuccessEmbed(
@@ -63,11 +98,7 @@ export async function execute(interaction: CommandInteraction, gameService: Game
       );
       await interaction.editReply({ embeds: [embed] });
     } else if (subcommand === 'disable') {
-      const channel = interaction.options.data[0].options?.[0].channel;
-      if (!channel) {
-        await interaction.editReply('Invalid channel provided.');
-        return;
-      }
+      const channel = interaction.options.getChannel('channel', true);
 
       gameService.disableChannel(channel.id, guildId);
       const embed = createSuccessEmbed(
@@ -86,6 +117,32 @@ export async function execute(interaction: CommandInteraction, gameService: Game
 
       const channelList = activeChannels.map(id => `<#${id}>`).join('\n');
       const embed = createSuccessEmbed('Active Channels', channelList);
+      await interaction.editReply({ embeds: [embed] });
+    } else if (subcommand === 'give-points') {
+      const user = interaction.options.getUser('user') || interaction.user;
+      const amount = interaction.options.getInteger('amount', true);
+
+      const result = gameService.givePoints(user.id, guildId, amount);
+      
+      const actionText = amount >= 0 ? 'Added' : 'Subtracted';
+      const absAmount = Math.abs(amount);
+      const embed = createSuccessEmbed(
+        'Points Modified',
+        `${actionText} ${absAmount} points ${amount >= 0 ? 'to' : 'from'} <@${user.id}>\nNew points: ${result.newPoints}/${result.maxPoints}`
+      );
+      await interaction.editReply({ embeds: [embed] });
+    } else if (subcommand === 'give-levels') {
+      const user = interaction.options.getUser('user') || interaction.user;
+      const amount = interaction.options.getInteger('amount', true);
+
+      const result = gameService.giveLevels(user.id, guildId, amount);
+      
+      const actionText = amount >= 0 ? 'Added' : 'Subtracted';
+      const absAmount = Math.abs(amount);
+      const embed = createSuccessEmbed(
+        'Levels Modified',
+        `${actionText} ${absAmount} level(s) ${amount >= 0 ? 'to' : 'from'} <@${user.id}>\nNew level: ${result.newLevel} ${result.aesthetic}`
+      );
       await interaction.editReply({ embeds: [embed] });
     }
   } catch (error) {

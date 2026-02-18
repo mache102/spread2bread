@@ -76,4 +76,20 @@ export class GameService {
     const channels = this.channelRepo.getActiveChannels(guildId);
     return channels.map(c => c.channelId);
   }
+
+  givePoints(userId: string, guildId: string, amount: number): { newPoints: number; maxPoints: number } {
+    const player = this.playerRepo.getOrCreatePlayer(userId, guildId);
+    player.currentPoints = Math.max(0, player.currentPoints + amount);
+    // Cap at maxPoints
+    player.currentPoints = Math.min(player.currentPoints, player.maxPoints);
+    this.playerRepo.updatePlayer(player);
+    return { newPoints: player.currentPoints, maxPoints: player.maxPoints };
+  }
+
+  giveLevels(userId: string, guildId: string, amount: number): { newLevel: number; aesthetic: string } {
+    const player = this.playerRepo.getOrCreatePlayer(userId, guildId);
+    player.breadLevel = Math.max(1, player.breadLevel + amount);
+    this.playerRepo.updatePlayer(player);
+    return { newLevel: player.breadLevel, aesthetic: getAesthetic(player.breadLevel) };
+  }
 }

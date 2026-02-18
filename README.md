@@ -18,8 +18,13 @@ Players start with level 1 bread and gain points by having others respond to the
 
 - `/bread` - View your bread level and hotness meter
 - `/upgrade` - Attempt to level up your bread
+- `/boost` - Activate your daily jam boost (3x points for 15 minutes)
 - `/leaderboard` - See server rankings
-- `/admin channels` - Configure active channels (admin only)
+- `/admin enable` - Enable bread game in a channel (admin only)
+- `/admin disable` - Disable bread game in a channel (admin only)
+- `/admin list` - List all active channels (admin only)
+- `/admin give-points` - Give/subtract points from a user (admin only)
+- `/admin give-levels` - Give/subtract levels from a user (admin only)
 
 ## Tech Stack
 

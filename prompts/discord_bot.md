@@ -28,7 +28,7 @@ cmds:
 "test-cmd": "tsx scripts/test-commands.ts"
 ```
 
-test-cmd creates a mock cli and monkey patches a few other discord funcs:
+test-cmd creates a mock cli and monkey patches a few other discord funcs; example:
 
 ```typescript
 /**

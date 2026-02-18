@@ -1,7 +1,10 @@
 import { REST, Routes } from 'discord.js';
-import { config } from '../src/config';
+import { config, validateConfig } from '../src/config';
 import * as fs from 'fs';
 import * as path from 'path';
+
+// Validate config before deploying
+validateConfig();
 
 interface Command {
   data: {
