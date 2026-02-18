@@ -9,7 +9,7 @@ Players start with level 1 bread and gain points by having others respond to the
 ## Key Features
 
 - **Message-based Point System**: Earn points when others chat after you
-- **Dynamic Upgrade Windows**: Randomized "hotness" ranges keep gameplay exciting
+- **Dynamic Upgrade Windows**: Randomized "jam amount" ranges keep gameplay exciting
 - **Daily Jam Boost**: 15-minute power-up that triples points you give to others
 - **Aesthetic Progression**: Unlock new bread types as you level up
 - **Server Leaderboard**: Compete for the top spot
@@ -18,7 +18,7 @@ Players start with level 1 bread and gain points by having others respond to the
 
 - `/help` - View all available commands and usage guide
 - `/about` - Learn about the bot and see player statistics
-- `/bread` - View your bread level and hotness meter
+- `/bread` - View your bread level and jam meter
 - `/upgrade` - Attempt to level up your bread
 - `/boost` - Activate your daily jam boost (3x points for 15 minutes)
 - `/leaderboard` - See server rankings

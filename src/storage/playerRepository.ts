@@ -1,6 +1,6 @@
 import { getDatabase } from './database';
 import { Player } from '../models';
-import { INITIAL_BREAD_LEVEL, INITIAL_MAX_POINTS, MAX_POINTS_VARIATION_PERCENTAGE } from '../utils/constants';
+import { INITIAL_BREAD_LEVEL, INITIAL_MAX_POINTS, MAX_POINTS_VARIATION_PERCENTAGE, LEVEL_LOSS_PERCENTAGE } from '../utils/constants';
 
 export class PlayerRepository {
   getOrCreatePlayer(userId: string, guildId: string): Player {
@@ -52,7 +52,7 @@ export class PlayerRepository {
     // Check if penalty should be applied
     if (player.currentPoints > player.maxPoints) {
       // Penalty: lose 10% of levels (rounded up), minimum 1 level
-      const levelsLost = Math.max(1, Math.ceil(player.breadLevel * 0.1));
+      const levelsLost = Math.max(1, Math.ceil(player.breadLevel * LEVEL_LOSS_PERCENTAGE));
       const oldLevel = player.breadLevel;
       player.breadLevel = Math.max(1, player.breadLevel - levelsLost);
       

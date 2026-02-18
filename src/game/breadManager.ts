@@ -23,13 +23,13 @@ export function getPlayerStats(player: Player, includeRanges: boolean = false): 
   const currentRange = getCurrentRange(player.currentPoints, ranges);
   
   const aesthetic = getAesthetic(player.breadLevel);
-  const hotnessLevel = currentRange.hotnessLevel;
+  const jamLevel = currentRange.jamLevel as string;
   const canUpgrade = currentRange.levelBonus > 0;
   
-  // Calculate hotness bar
+  // Calculate jam meter
   const progress = player.currentPoints / player.maxPoints;
   const filledBars = Math.floor(progress * BAR_LENGTH);
-  const hotnessBar = BAR_FILLED.repeat(filledBars) + BAR_EMPTY.repeat(BAR_LENGTH - filledBars);
+  const jamBar = BAR_FILLED.repeat(filledBars) + BAR_EMPTY.repeat(BAR_LENGTH - filledBars);
   
   // Check if boost is active
   const now = Date.now();
@@ -38,8 +38,8 @@ export function getPlayerStats(player: Player, includeRanges: boolean = false): 
   return {
     player,
     aesthetic,
-    hotnessLevel,
-    hotnessBar,
+    jamLevel,
+    jamBar,
     canUpgrade,
     isBoosted,
     upgradeRanges: includeRanges ? ranges : undefined,

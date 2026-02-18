@@ -6,9 +6,9 @@ bread starts at lvl 1 with a points meter.
 
 points are gained from jam 'spreading' to other players' bread ie:
 when player sends a regular chat message, the next N messages (by other ppl) given the player N/N, (N-1)/N, ..., 1/N points. (immediate next message gives 1 point, N-th later msg gives 1/N). 
-players can see how many points they have rn, and also a hotness meter. at some point the player can level up their bread by 1 level; but if they wait, there are increasingly smaller windows in which the player can upgrade to gain more than 1 level; for example, upgrading at 0-200: not ready; 201-250: +1 lvl 250-275:+2 lvl, 275-290: +4 lvl, 290-295: +10 lvl, 295-299: +20 lvl, 299-300: +50 lvl; beyond 300 = point meter resets, and player loses 10% of their levels on the bread.
+players can see how many points they have rn, and also a jam meter. at some point the player can level up their bread by 1 level; but if they wait, there are increasingly smaller windows in which the player can upgrade to gain more than 1 level; for example, upgrading at 0-200: not ready; 201-250: +1 lvl 250-275:+2 lvl, 275-290: +4 lvl, 290-295: +10 lvl, 295-299: +20 lvl, 299-300: +50 lvl; beyond 300 = point meter resets, and player loses 10% of their levels on the bread.
 
-in the embed/output, players only see a hotness level, so each range is converted into plain english, and show a bar. evrey time the bar is reset or the bread levels up, the ranges are randomized; so players never know which is the 'perfect' range and have to either play it safe or play it fast. 
+in the embed/output, players only see a jam amount, so each range is converted into plain english and shown as a jam meter. every time the meter is reset or the bread levels up, the ranges are randomized; players never know which is the 'perfect' range and must either play it safe or play it fast. 
 how to generate ranges: start with the max value (i.e. 300), then create a normalized base range [0 to 1]; repeat this several times:
 for a starting range A to B, select random number N btwn 0.5 and 1; then it gets split into two ranges: [A, lerp(A, B, N)] and [lerp(A,B,N), B]. repeat for the latter created range ([lerp(A,B,N), B]).
 

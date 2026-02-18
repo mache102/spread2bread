@@ -28,14 +28,14 @@ export interface UpgradeRange {
   min: number;
   max: number;
   levelBonus: number;
-  hotnessLevel: string;
+  jamLevel: string;
 }
 
 export interface PlayerStats {
   player: Player;
   aesthetic: string;
-  hotnessLevel: string;
-  hotnessBar: string;
+  jamLevel: string;
+  jamBar: string;
   canUpgrade: boolean;
   isBoosted: boolean;
   upgradeRanges?: UpgradeRange[];

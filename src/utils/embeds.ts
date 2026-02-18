@@ -1,8 +1,9 @@
 import { EmbedBuilder } from 'discord.js';
 import { PlayerStats, LeaderboardEntry } from '../models';
+import { POINTS_DISPLAY_DECIMALS } from '../utils/constants';
 
 export function createBreadStatusEmbed(stats: PlayerStats, username: string, showMaxPoints: boolean = false): EmbedBuilder {
-  const currentPointsRounded = stats.player.currentPoints.toFixed(2);
+  const currentPointsRounded = stats.player.currentPoints.toFixed(POINTS_DISPLAY_DECIMALS);
   const pointsDisplay = showMaxPoints 
     ? `${currentPointsRounded}/${stats.player.maxPoints}`
     : `${currentPointsRounded}/???`;
@@ -14,8 +15,8 @@ export function createBreadStatusEmbed(stats: PlayerStats, username: string, sho
       { name: 'Bread Type', value: stats.aesthetic, inline: true },
       { name: 'Level', value: stats.player.breadLevel.toString(), inline: true },
       { name: 'Points', value: pointsDisplay, inline: true },
-      { name: 'Hotness', value: stats.hotnessLevel, inline: false },
-      { name: 'Meter', value: stats.hotnessBar, inline: false }
+      { name: 'Jam Amount', value: stats.jamLevel, inline: false },
+      { name: 'Jam Meter', value: stats.jamBar, inline: false }
     )
     .setTimestamp();
 
@@ -26,7 +27,7 @@ export function createBreadStatusEmbed(stats: PlayerStats, username: string, sho
   // Add upgrade ranges if provided (test mode)
   if (stats.upgradeRanges && showMaxPoints) {
     const rangeText = stats.upgradeRanges
-      .map(r => `${r.min}-${r.max}: ${r.levelBonus > 0 ? `+${r.levelBonus} lvl` : r.hotnessLevel}`)
+      .map(r => `${r.min}-${r.max}: ${r.levelBonus > 0 ? `+${r.levelBonus} lvl` : r.jamLevel}`)
       .join('\n');
     embed.addFields({ name: 'Upgrade Ranges (Test Mode)', value: `\`\`\`\n${rangeText}\n\`\`\``, inline: false });
   }

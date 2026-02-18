@@ -4,7 +4,7 @@ import { createBreadStatusEmbed } from '../utils/embeds';
 
 export const data = new SlashCommandBuilder()
   .setName('bread')
-  .setDescription('Check your bread status and hotness level');
+  .setDescription('Check your bread status and jam meter')
 
 export async function execute(
   interaction: CommandInteraction, 

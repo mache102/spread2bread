@@ -29,7 +29,7 @@
 - **Persistence:** SQLite via [src/storage/](src/storage/) repositories
 
 ### Core Utilities
-- [src/utils/embeds.ts](src/utils/embeds.ts) – Discord embed formatting (supports test mode for showing/hiding max points)
+- [src/utils/embeds.ts](src/utils/embeds.ts) – Discord embed formatting (shows `Jam Amount` / `Jam Meter`; supports test mode for showing/hiding max points)
 - [src/utils/constants.ts](src/utils/constants.ts) – Game constants and thresholds
 
 ## 3. Commonly Used Styles

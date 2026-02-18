@@ -1,6 +1,7 @@
 import { CommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { GameService } from '../services/gameService';
 import { createSuccessEmbed } from '../utils/embeds';
+import { POINT_DISTRIBUTION_WINDOW } from '../utils/constants';
 
 export const data = new SlashCommandBuilder()
   .setName('about')
@@ -28,11 +29,14 @@ export async function execute(interaction: CommandInteraction, gameService: Game
 📊 **${playerCount}** players in ${guildName}
 
 **How It Works:**
-• Send messages to earn jam points from the next 10 responses
+• Send messages and jam points from the next ${POINT_DISTRIBUTION_WINDOW} messages sent by other users (you do **not** receive jam from your own message)
+• Messages closer in time to yours 'spread' more jam points to your bread
 • Build up points to upgrade your bread at the perfect moment
 • Time your upgrades right for massive level bonuses
 • Unlock aesthetic bread types as you level up
-• Activate daily jam boost for 3x point generation
+
+• Activate daily boost to spread 3x jam points to others for 15 minutes
+• Compete on the server leaderboard for bread supremacy
 
 **Get Started:**
 Use \`/help\` to see all available commands!

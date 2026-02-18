@@ -1,7 +1,7 @@
 import { UpgradeRange } from '../models';
 import { 
   UPGRADE_RANGES, 
-  NOT_READY_HOTNESS, 
+  NOT_READY_JAM, 
   RANGE_SPLIT_MIN, 
   RANGE_SPLIT_MAX,
   RANGE_SPLITS 
@@ -40,7 +40,7 @@ export function generateUpgradeRanges(maxPoints: number): UpgradeRange[] {
     min: Math.floor(notReadyRange.min * maxPoints),
     max: Math.floor(notReadyRange.max * maxPoints),
     levelBonus: 0,
-    hotnessLevel: NOT_READY_HOTNESS,
+    jamLevel: NOT_READY_JAM,
   });
   
   // Assign remaining ranges to upgrade bonuses (in ascending order)
@@ -52,7 +52,7 @@ export function generateUpgradeRanges(maxPoints: number): UpgradeRange[] {
       min: Math.floor(range.min * maxPoints),
       max: Math.floor(range.max * maxPoints),
       levelBonus: upgradeConfig.levelBonus,
-      hotnessLevel: upgradeConfig.hotnessLevel,
+      jamLevel: upgradeConfig.jamLevel || (upgradeConfig as any).hotnessLevel,
     });
   }
   

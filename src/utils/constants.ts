@@ -13,15 +13,15 @@ export const BOOST_MULTIPLIER = 3;
 
 // Upgrade Ranges (base configuration)
 export const UPGRADE_RANGES = [
-  { levelBonus: 1, hotnessLevel: 'Warm' },
-  { levelBonus: 2, hotnessLevel: 'Hot' },
-  { levelBonus: 4, hotnessLevel: 'Very Hot' },
-  { levelBonus: 10, hotnessLevel: 'Blazing' },
-  { levelBonus: 20, hotnessLevel: 'Scorching' },
-  { levelBonus: 50, hotnessLevel: 'PERFECT' },
+  { levelBonus: 1, jamLevel: 'Light' },
+  { levelBonus: 2, jamLevel: 'Spread' },
+  { levelBonus: 4, jamLevel: 'Generous' },
+  { levelBonus: 10, jamLevel: 'Glazed' },
+  { levelBonus: 20, jamLevel: 'Glorious' },
+  { levelBonus: 50, jamLevel: 'PERFECT' },
 ];
 
-export const NOT_READY_HOTNESS = 'Not Ready';
+export const NOT_READY_JAM = 'Not Ready';
 
 // Aesthetic Milestones
 export const AESTHETIC_MILESTONES = [
@@ -47,7 +47,10 @@ export const RANGE_SPLIT_MIN = 0.5;
 export const RANGE_SPLIT_MAX = 0.8;
 export const RANGE_SPLITS = UPGRADE_RANGES.length; // 6 splits + 1 final range = 7 total (1 Not Ready + 6 upgrade tiers)
 
-// Hotness Bar Display
+// Jam Meter Display
 export const BAR_LENGTH = 10;
 export const BAR_FILLED = '█';
 export const BAR_EMPTY = '░';
+
+// Display formatting
+export const POINTS_DISPLAY_DECIMALS = 2;

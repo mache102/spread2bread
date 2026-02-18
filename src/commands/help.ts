@@ -15,7 +15,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
       {
         name: '📊 Game Commands',
         value: 
-          '`/bread` - Check your bread level and hotness meter\n' +
+          '`/bread` - Check your bread level and jam meter\n' +
           '`/upgrade` - Attempt to level up your bread (timing is key!)\n' +
           '`/boost` - Activate your daily jam boost (3x points, 15 min)\n' +
           '`/leaderboard` - View the server\'s top bread masters',
@@ -43,7 +43,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
         value:
           '1. Send messages in enabled channels\n' +
           '2. Earn points when others respond after you\n' +
-          '3. Watch your hotness meter fill up\n' +
+          '3. Watch your jam meter fill up\n' +
           '4. Upgrade at the perfect moment for bonus levels\n' +
           '5. Compete for the #1 spot on the leaderboard!',
         inline: false,
@@ -51,7 +51,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
       {
         name: '⚡ Pro Tips',
         value:
-          '• Hotness ranges are randomized each upgrade\n' +
+          '• Jam ranges are randomized each upgrade\n' +
           '• Going over max points costs you 10% of your levels!\n' +
           '• Use daily boost strategically to help everyone level faster\n' +
           '• Different bread aesthetics unlock at milestone levels',
