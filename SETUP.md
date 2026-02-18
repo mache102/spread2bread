@@ -5,6 +5,8 @@
 - Node.js 18+ and npm installed
 - Discord Bot Token (from Discord Developer Portal)
 
+- Discord Bot w/ perms (Send Messages, view Channels, Send Embed Links, View Message History), and create a redirect uri: https://discordapp.com/oauth2/authorize?&client_id=[client_id]&scope=bot; oauth2 perms: bot and applications.commands
+
 ## Installation
 
 ```bash
@@ -20,12 +22,10 @@ npm run build
 
 ## Configuration
 
-Create a `.env` file in the root directory:
+Create a `.env` file in the root directory and set vars:
 
 ```bash
-DISCORD_TOKEN=your_discord_bot_token_here
-CLIENT_ID=your_application_id_here
-GUILD_ID=your_test_guild_id_here
+cp .env.example .env
 ```
 
 ## Database Setup
@@ -43,7 +43,7 @@ mkdir -p data
 # Development mode with auto-reload
 npm run dev
 
-# Production mode
+# Production mode (build first with npm run build)
 npm start
 ```
 
