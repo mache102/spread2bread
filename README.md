@@ -66,5 +66,4 @@ exit
 
 ### Bot Usage Screenshot
 
-![Bot Usage](docs/screenshot-placeholder.png)
-*Screenshot coming soon - bot in action on Discord*
+![Bot Usage](docs/screenshot.png)
