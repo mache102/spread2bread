@@ -56,6 +56,31 @@ export function generateUpgradeRanges(maxPoints: number): UpgradeRange[] {
     });
   }
   
+  // Deflate compressed ranges from highest bonus to lowest
+  // Work backwards to ensure each range has at least 1 unit width with no overlaps
+  let nextRangeMin = maxPoints + 1; // Start beyond maxPoints
+  
+  for (let i = ranges.length - 1; i >= 0; i--) {
+    const range = ranges[i];
+    
+    // For the last range, it must end at maxPoints
+    if (i === ranges.length - 1) {
+      range.max = maxPoints;
+    } else {
+      // For other ranges, they must end before the next range starts
+      range.max = Math.min(range.max, nextRangeMin - 1);
+    }
+    
+    // Ensure this range has at least 1 unit width
+    range.min = Math.min(range.min, range.max - 1);
+    
+    // If min went negative (shouldn't happen with reasonable inputs), clamp to 0
+    range.min = Math.max(0, range.min);
+    
+    // Update nextRangeMin for the next iteration
+    nextRangeMin = range.min;
+  }
+  
   return ranges;
 }
 

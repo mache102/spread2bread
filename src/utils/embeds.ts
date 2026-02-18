@@ -2,9 +2,10 @@ import { EmbedBuilder } from 'discord.js';
 import { PlayerStats, LeaderboardEntry } from '../models';
 
 export function createBreadStatusEmbed(stats: PlayerStats, username: string, showMaxPoints: boolean = false): EmbedBuilder {
+  const currentPointsRounded = stats.player.currentPoints.toFixed(2);
   const pointsDisplay = showMaxPoints 
-    ? `${stats.player.currentPoints}/${stats.player.maxPoints}`
-    : `${stats.player.currentPoints}/???`;
+    ? `${currentPointsRounded}/${stats.player.maxPoints}`
+    : `${currentPointsRounded}/???`;
   
   const embed = new EmbedBuilder()
     .setColor(stats.isBoosted ? 0xFF6B6B : 0x3498DB)
@@ -104,5 +105,17 @@ export function createSuccessEmbed(title: string, message: string): EmbedBuilder
     .setColor(0x2ECC71)
     .setTitle(`✅ ${title}`)
     .setDescription(message)
+    .setTimestamp();
+}
+
+export function createPenaltyEmbed(username: string, levelsLost: number, newLevel: number, aesthetic: string): EmbedBuilder {
+  return new EmbedBuilder()
+    .setColor(0xFF6B6B)
+    .setTitle('🔥 Bread Overcooked!')
+    .setDescription(`${username}'s bread got too hot and lost **${levelsLost}** level${levelsLost > 1 ? 's' : ''}!\n\nYour points exceeded the maximum. Be careful to upgrade before hitting the limit!`)
+    .addFields(
+      { name: 'New Level', value: newLevel.toString(), inline: true },
+      { name: 'Bread Type', value: aesthetic, inline: true }
+    )
     .setTimestamp();
 }

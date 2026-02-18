@@ -1,4 +1,4 @@
-import { TrackedMessage } from '../models';
+import { TrackedMessage, PenaltyInfo } from '../models';
 import { TRACK_MESSAGE_COUNT, BOOST_MULTIPLIER } from '../utils/constants';
 import { ChannelRepository } from '../storage/channelRepository';
 import { PlayerRepository } from '../storage/playerRepository';
@@ -18,12 +18,12 @@ export class PointTracker {
     guildId: string,
     userId: string,
     timestamp: number
-  ): void {
+  ): PenaltyInfo[] {
     // Get recent messages before this one
     const recentMessages = this.channelRepo.getRecentMessages(channelId, TRACK_MESSAGE_COUNT);
     
-    // Distribute points to previous message senders
-    this.distributePoints(recentMessages, guildId, userId);
+    // Distribute points to previous message senders and collect penalties
+    const penalties = this.distributePoints(recentMessages, guildId, userId);
     
     // Add this message to tracking
     const newMessage: TrackedMessage = {
@@ -36,10 +36,13 @@ export class PointTracker {
     };
     
     this.channelRepo.addTrackedMessage(newMessage);
+    
+    return penalties;
   }
 
-  private distributePoints(messages: TrackedMessage[], guildId: string, currentUserId: string): void {
+  private distributePoints(messages: TrackedMessage[], guildId: string, currentUserId: string): PenaltyInfo[] {
     const now = Date.now();
+    const penalties: PenaltyInfo[] = [];
     
     for (const message of messages) {
       // Don't give points to yourself
@@ -57,8 +60,21 @@ export class PointTracker {
       // Apply boost multiplier if active
       const points = isBoostActive ? basePoints * BOOST_MULTIPLIER : basePoints;
       
-      // Award points
-      this.playerRepo.addPoints(message.userId, guildId, points);
+      // Award points and check for penalty
+      const result = this.playerRepo.addPoints(message.userId, guildId, points);
+      
+      if (result.penaltyApplied) {
+        // Get updated player to get new level
+        const updatedPlayer = this.playerRepo.getOrCreatePlayer(message.userId, guildId);
+        penalties.push({
+          userId: message.userId,
+          levelsLost: result.levelsLost,
+          oldLevel: updatedPlayer.breadLevel + result.levelsLost,
+          newLevel: updatedPlayer.breadLevel,
+        });
+      }
     }
+    
+    return penalties;
   }
 }

@@ -6,7 +6,6 @@ import {
   BAR_FILLED, 
   BAR_EMPTY,
   INITIAL_MAX_POINTS,
-  LEVEL_LOSS_PERCENTAGE, 
   MAX_POINTS_VARIATION_PERCENTAGE
 } from '../utils/constants';
 
@@ -55,30 +54,28 @@ export function attemptUpgrade(player: Player): { success: boolean; levelsGained
     return { success: false, levelsGained: 0 };
   }
   
-  // Check if over maxPoints
-  if (player.currentPoints > player.maxPoints) {
-    // Penalty: lose 10% of levels
-    const levelsLost = Math.floor(player.breadLevel * LEVEL_LOSS_PERCENTAGE);
-    player.breadLevel = Math.max(1, player.breadLevel - levelsLost);
-    player.currentPoints = 0;
-    player.lastUpgradeAt = Date.now();
-    return { success: false, levelsGained: -levelsLost };
-  }
-  
   // Successful upgrade
   player.breadLevel += currentRange.levelBonus;
-  player.currentPoints = 0;
-  player.lastUpgradeAt = Date.now();
+
+  resetPointMeter(player);
   
+  player.lastUpgradeAt = Date.now();
+
   return { success: true, levelsGained: currentRange.levelBonus };
 }
 
 export function resetPointMeter(player: Player): void {
   player.currentPoints = 0;
   // Randomize maxPoints: 300 +/- 20% (240 to 360)
+  
+  player.maxPoints = getRandomizedMaxPoints();
+
+}
+
+
+function getRandomizedMaxPoints(): number {
   const variation = INITIAL_MAX_POINTS * MAX_POINTS_VARIATION_PERCENTAGE;
-  player.maxPoints = Math.floor(
+  return Math.floor(
     INITIAL_MAX_POINTS - variation + Math.random() * (variation * 2)
   );
-  player.lastUpgradeAt = Date.now();
 }

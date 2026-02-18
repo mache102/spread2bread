@@ -44,8 +44,8 @@ export const AESTHETIC_MILESTONES = [
 
 // Range Generation
 export const RANGE_SPLIT_MIN = 0.5;
-export const RANGE_SPLIT_MAX = 1.0;
-export const RANGE_SPLITS = 5;
+export const RANGE_SPLIT_MAX = 0.8;
+export const RANGE_SPLITS = UPGRADE_RANGES.length; // 6 splits + 1 final range = 7 total (1 Not Ready + 6 upgrade tiers)
 
 // Hotness Bar Display
 export const BAR_LENGTH = 10;

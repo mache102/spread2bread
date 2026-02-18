@@ -2,7 +2,7 @@ import { PlayerRepository } from '../storage/playerRepository';
 import { ChannelRepository } from '../storage/channelRepository';
 import { PointTracker } from '../game/pointTracker';
 import { getPlayerStats, attemptUpgrade, getAesthetic } from '../game/breadManager';
-import { PlayerStats, LeaderboardEntry } from '../models';
+import { PlayerStats, LeaderboardEntry, PenaltyInfo } from '../models';
 
 export class GameService {
   private playerRepo: PlayerRepository;
@@ -54,14 +54,14 @@ export class GameService {
     channelId: string,
     guildId: string,
     userId: string
-  ): void {
+  ): PenaltyInfo[] {
     // Check if channel is active
     if (!this.channelRepo.isChannelActive(channelId, guildId)) {
-      return;
+      return [];
     }
 
     const timestamp = Date.now();
-    this.pointTracker.processMessage(messageId, channelId, guildId, userId, timestamp);
+    return this.pointTracker.processMessage(messageId, channelId, guildId, userId, timestamp);
   }
 
   enableChannel(channelId: string, guildId: string): void {

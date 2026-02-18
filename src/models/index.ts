@@ -46,3 +46,10 @@ export interface LeaderboardEntry {
   breadLevel: number;
   aesthetic: string;
 }
+
+export interface PenaltyInfo {
+  userId: string;
+  levelsLost: number;
+  oldLevel: number;
+  newLevel: number;
+}
