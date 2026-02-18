@@ -1,6 +1,7 @@
 import { describe, test, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import { GameService } from '../../src/services/gameService';
 import { getDatabase, closeDatabase, resetDatabase } from '../../src/storage/database';
+import { INITIAL_BREAD_LEVEL, INITIAL_MAX_POINTS } from '../../src/utils/constants';
 
 describe('Game Integration Tests', () => {
   let gameService: GameService;
@@ -27,9 +28,9 @@ describe('Game Integration Tests', () => {
   test('should create new player with initial stats', () => {
     const stats = gameService.getPlayerStats(testUserId, testGuildId);
     
-    expect(stats.player.breadLevel).toBe(1);
+    expect(stats.player.breadLevel).toBe(INITIAL_BREAD_LEVEL);
     expect(stats.player.currentPoints).toBe(0);
-    expect(stats.player.maxPoints).toBe(300);
+    expect(stats.player.maxPoints).toBe(INITIAL_MAX_POINTS);
     expect(stats.aesthetic).toContain('Plain Bread');
   });
 
@@ -77,7 +78,7 @@ describe('Game Integration Tests', () => {
     
     // Verify top player is user-3 with 15 levels
     expect(leaderboard[0].userId).toBe('user-3');
-    expect(leaderboard[0].breadLevel).toBe(16); // 1 base + 15 given
+    expect(leaderboard[0].breadLevel).toBe(INITIAL_BREAD_LEVEL + 15); // 1 base + 15 given
   });
 
   test('should enable and disable channels', () => {

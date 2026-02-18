@@ -1,4 +1,11 @@
 import { CommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import {
+  BOOST_MULTIPLIER,
+  BOOST_DURATION_MS,
+  MS_PER_MINUTE,
+  LEVEL_LOSS_PERCENTAGE,
+  EMBED_COLORS,
+} from '../utils/constants';
 
 export const data = new SlashCommandBuilder()
   .setName('help')
@@ -8,7 +15,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
   await interaction.deferReply();
 
   const embed = new EmbedBuilder()
-    .setColor(0x3498DB)
+    .setColor(EMBED_COLORS.INFO)
     .setTitle('🍞 Spread2Bread Commands')
     .setDescription('Spread jam on your bread to level up and compete with others!')
     .addFields(
@@ -17,7 +24,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
         value: 
           '`/bread` - Check your bread level and jam meter\n' +
           '`/upgrade` - Attempt to level up your bread (timing is key!)\n' +
-          '`/boost` - Activate your daily jam boost (3x points, 15 min)\n' +
+          '`/boost` - Activate your daily jam boost (' + BOOST_MULTIPLIER + 'x points, ' + (BOOST_DURATION_MS / MS_PER_MINUTE) + ' min)\n' +
           '`/leaderboard` - View the server\'s top bread masters',
         inline: false,
       },
@@ -52,7 +59,7 @@ export async function execute(interaction: CommandInteraction): Promise<void> {
         name: '⚡ Pro Tips',
         value:
           '• Jam ranges are randomized each upgrade\n' +
-          '• Going over max points costs you 10% of your levels!\n' +
+          '• Going over max points costs you ' + (LEVEL_LOSS_PERCENTAGE * 100) + '% of your levels!\n' +
           '• Use daily boost strategically to help everyone level faster\n' +
           '• Different bread aesthetics unlock at milestone levels',
         inline: false,

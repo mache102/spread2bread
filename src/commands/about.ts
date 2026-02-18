@@ -1,7 +1,7 @@
 import { CommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { GameService } from '../services/gameService';
 import { createSuccessEmbed } from '../utils/embeds';
-import { POINT_DISTRIBUTION_WINDOW } from '../utils/constants';
+import { POINT_DISTRIBUTION_WINDOW, MAX_LEADERBOARD_FETCH } from '../utils/constants';
 
 export const data = new SlashCommandBuilder()
   .setName('about')
@@ -19,7 +19,7 @@ export async function execute(interaction: CommandInteraction, gameService: Game
     }
 
     // Get player count in this guild
-    const leaderboard = gameService.getLeaderboard(guildId, 1000); // Get all players
+    const leaderboard = gameService.getLeaderboard(guildId, MAX_LEADERBOARD_FETCH); // Get all players
     const playerCount = leaderboard.length;
     const guildName = interaction.guild?.name || 'this server';
 

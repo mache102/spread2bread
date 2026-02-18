@@ -23,7 +23,7 @@ export function getPlayerStats(player: Player, includeRanges: boolean = false): 
   const currentRange = getCurrentRange(player.currentPoints, ranges);
   
   const aesthetic = getAesthetic(player.breadLevel);
-  const jamLevel = currentRange.jamLevel as string;
+  const jamLevel = currentRange.jamLevel;
   const canUpgrade = currentRange.levelBonus > 0;
   
   // Calculate jam meter

@@ -23,6 +23,7 @@ import { EmbedBuilder } from 'discord.js';
 import { getDatabase } from '../src/storage/database';
 import { GameService } from '../src/services/gameService';
 import { JamBoostService } from '../src/services/jamBoostService';
+import { EMBED_COLORS } from '../src/utils/constants';
 
 // Import all commands
 import * as bread from '../src/commands/bread';
@@ -87,11 +88,11 @@ function embedToPlaintext(embed: EmbedBuilder): string {
   }
   
   if (data.color) {
-    const colorName = data.color === 0x2ECC71 ? '[SUCCESS]' : 
-                      data.color === 0xE74C3C ? '[ERROR]' : 
-                      data.color === 0xF39C12 ? '[WARNING]' : 
-                      data.color === 0x3498DB ? '[INFO]' : 
-                      data.color === 0xFF6B6B ? '[BOOST]' : 
+    const colorName = data.color === EMBED_COLORS.SUCCESS ? '[SUCCESS]' :
+                      data.color === EMBED_COLORS.ERROR   ? '[ERROR]' :
+                      data.color === EMBED_COLORS.WARNING ? '[WARNING]' :
+                      data.color === EMBED_COLORS.INFO    ? '[INFO]' :
+                      data.color === EMBED_COLORS.BOOST   ? '[BOOST]' :
                       '[INFO]';
     output = `${colorName} ${output}`;
   }

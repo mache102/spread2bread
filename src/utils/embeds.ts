@@ -1,6 +1,13 @@
 import { EmbedBuilder } from 'discord.js';
 import { PlayerStats, LeaderboardEntry } from '../models';
-import { POINTS_DISPLAY_DECIMALS } from '../utils/constants';
+import {
+  POINTS_DISPLAY_DECIMALS,
+  LEADERBOARD_DISPLAY_SIZE,
+  EMBED_COLORS,
+  BOOST_MULTIPLIER,
+  UPGRADE_LEVEL_EPIC_THRESHOLD,
+  UPGRADE_LEVEL_GREAT_THRESHOLD,
+} from './constants';
 
 export function createBreadStatusEmbed(stats: PlayerStats, username: string, showMaxPoints: boolean = false): EmbedBuilder {
   const currentPointsRounded = stats.player.currentPoints.toFixed(POINTS_DISPLAY_DECIMALS);
@@ -9,7 +16,7 @@ export function createBreadStatusEmbed(stats: PlayerStats, username: string, sho
     : `${currentPointsRounded}/???`;
   
   const embed = new EmbedBuilder()
-    .setColor(stats.isBoosted ? 0xFF6B6B : 0x3498DB)
+    .setColor(stats.isBoosted ? EMBED_COLORS.BOOST : EMBED_COLORS.INFO)
     .setTitle(`${username}'s Bread`)
     .addFields(
       { name: 'Bread Type', value: stats.aesthetic, inline: true },
@@ -21,7 +28,7 @@ export function createBreadStatusEmbed(stats: PlayerStats, username: string, sho
     .setTimestamp();
 
   if (stats.isBoosted) {
-    embed.setDescription('🔥 **JAM BOOST ACTIVE** - Giving 3x points to others!');
+    embed.setDescription(`🔥 **JAM BOOST ACTIVE** - Giving ${BOOST_MULTIPLIER}x points to others!`);
   }
   
   // Add upgrade ranges if provided (test mode)
@@ -44,14 +51,14 @@ export function createUpgradeResultEmbed(
 ): EmbedBuilder {
   if (!success) {
     return new EmbedBuilder()
-      .setColor(0xE74C3C)
+      .setColor(EMBED_COLORS.ERROR)
       .setTitle('❌ Not Ready to Upgrade')
       .setDescription('Your bread needs more points before it can level up!')
       .setTimestamp();
   }
 
   const embed = new EmbedBuilder()
-    .setColor(0x2ECC71)
+    .setColor(EMBED_COLORS.SUCCESS)
     .setTitle('✨ Bread Upgraded!')
     .setDescription(`${username}'s bread gained **${levelsGained}** level${levelsGained > 1 ? 's' : ''}!`)
     .addFields(
@@ -60,9 +67,9 @@ export function createUpgradeResultEmbed(
     )
     .setTimestamp();
 
-  if (levelsGained >= 20) {
+  if (levelsGained >= UPGRADE_LEVEL_EPIC_THRESHOLD) {
     embed.setDescription(`${username}'s bread gained **${levelsGained}** levels! 🎉🎉🎉 Amazing timing!`);
-  } else if (levelsGained >= 10) {
+  } else if (levelsGained >= UPGRADE_LEVEL_GREAT_THRESHOLD) {
     embed.setDescription(`${username}'s bread gained **${levelsGained}** levels! 🎉 Great timing!`);
   }
 
@@ -71,7 +78,7 @@ export function createUpgradeResultEmbed(
 
 export function createLeaderboardEmbed(entries: LeaderboardEntry[], guildName: string): EmbedBuilder {
   const embed = new EmbedBuilder()
-    .setColor(0xF39C12)
+    .setColor(EMBED_COLORS.WARNING)
     .setTitle(`🏆 ${guildName} Bread Leaderboard`)
     .setTimestamp();
 
@@ -82,7 +89,7 @@ export function createLeaderboardEmbed(entries: LeaderboardEntry[], guildName: s
 
   const medals = ['🥇', '🥈', '🥉'];
   const description = entries
-    .slice(0, 10)
+    .slice(0, LEADERBOARD_DISPLAY_SIZE)
     .map((entry, index) => {
       const medal = index < 3 ? medals[index] : `${index + 1}.`;
       return `${medal} <@${entry.userId}> - **Level ${entry.breadLevel}** ${entry.aesthetic}`;
@@ -95,7 +102,7 @@ export function createLeaderboardEmbed(entries: LeaderboardEntry[], guildName: s
 
 export function createErrorEmbed(message: string): EmbedBuilder {
   return new EmbedBuilder()
-    .setColor(0xE74C3C)
+    .setColor(EMBED_COLORS.ERROR)
     .setTitle('❌ Error')
     .setDescription(message)
     .setTimestamp();
@@ -103,7 +110,7 @@ export function createErrorEmbed(message: string): EmbedBuilder {
 
 export function createSuccessEmbed(title: string, message: string): EmbedBuilder {
   return new EmbedBuilder()
-    .setColor(0x2ECC71)
+    .setColor(EMBED_COLORS.SUCCESS)
     .setTitle(`✅ ${title}`)
     .setDescription(message)
     .setTimestamp();
@@ -111,7 +118,7 @@ export function createSuccessEmbed(title: string, message: string): EmbedBuilder
 
 export function createPenaltyEmbed(username: string, levelsLost: number, oldLevel: number, newLevel: number, aesthetic: string): EmbedBuilder {
   return new EmbedBuilder()
-    .setColor(0xFF6B6B)
+    .setColor(EMBED_COLORS.BOOST)
     .setTitle('🍓 Too much jam!')
     .setDescription(`${username}'s bread got too much jam and dropped from **Level ${oldLevel} → ${newLevel}** (−${levelsLost}).\n\nYour points exceeded the maximum and the meter was reset. Upgrade earlier to avoid penalties!`)
     .addFields(

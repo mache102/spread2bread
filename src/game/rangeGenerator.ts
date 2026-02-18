@@ -52,7 +52,7 @@ export function generateUpgradeRanges(maxPoints: number): UpgradeRange[] {
       min: Math.floor(range.min * maxPoints),
       max: Math.floor(range.max * maxPoints),
       levelBonus: upgradeConfig.levelBonus,
-      jamLevel: upgradeConfig.jamLevel || (upgradeConfig as any).hotnessLevel,
+      jamLevel: upgradeConfig.jamLevel,
     });
   }
   
